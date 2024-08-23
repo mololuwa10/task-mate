@@ -13,6 +13,7 @@ import { fetchUserDetails, UserDetails } from "@/lib/auth";
 import { Ionicons } from "@expo/vector-icons";
 import SearchSection from "./SearchSection";
 import ProductivitySection from "./ProductivitySection";
+import ProjectSummary from "./ProjectSummary";
 // import LinearGradient from "react-native-linear-gradient";
 
 function HomeScreen() {
@@ -61,16 +62,19 @@ function HomeScreen() {
 							</Text>
 						</View>
 
-						<View style={{ justifyContent: "flex-end" }}>
+						<TouchableOpacity style={{ justifyContent: "flex-end" }}>
 							<Ionicons name="notifications-outline" size={35} />
-						</View>
+						</TouchableOpacity>
 					</View>
 
 					{/* Search Icon */}
 					<SearchSection />
 
 					{/* Productivity Section */}
-					<ProductivitySection />
+					{/* <ProductivitySection /> */}
+
+					{/* Project Summary */}
+					<ProjectSummary />
 				</ScrollView>
 			</View>
 		</>
