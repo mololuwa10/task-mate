@@ -19,12 +19,14 @@ import { useLogin } from "@/lib/auth";
 
 type RootStackParamList = {
 	Navigation: undefined;
+	Register: undefined;
 	// Add other screen names and their respective params here
 };
 
 type LoginNavigationProp = StackNavigationProp<
 	RootStackParamList,
-	"Navigation"
+	"Navigation",
+	"Register"
 >;
 
 export default function Login() {
@@ -59,6 +61,10 @@ export default function Login() {
 
 	const togglePasswordVisibility = () => {
 		setPasswordVisible(!passwordVisible);
+	};
+
+	const navigateRegister = () => {
+		navigation.navigate("Register");
 	};
 
 	const handleLogin = async () => {
@@ -216,6 +222,35 @@ export default function Login() {
 								{confirmationMessage}
 							</Text>
 						) : null}
+					</View>
+
+					<View
+						style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+					>
+						<View style={{ flexDirection: "row", alignItems: "center" }}>
+							<Text
+								style={{
+									color: "white",
+									fontSize: 18,
+									marginRight: 10,
+									textAlign: "center",
+								}}
+							>
+								New to Task-mate?
+								<TouchableOpacity onPress={navigateRegister}>
+									<Text
+										style={{
+											fontSize: 18,
+											textDecorationLine: "underline",
+											color: "#007BFF",
+											marginLeft: 5,
+										}}
+									>
+										Register
+									</Text>
+								</TouchableOpacity>
+							</Text>
+						</View>
 					</View>
 
 					<TouchableOpacity

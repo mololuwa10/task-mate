@@ -177,7 +177,7 @@ export default function SignInOptions() {
 								textAlign: "center",
 							}}
 						>
-							Have an account?{" "}
+							Have an account?
 							<TouchableOpacity onPress={handleLoginPress}>
 								<Text
 									style={{
