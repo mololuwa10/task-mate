@@ -159,7 +159,7 @@ function ProfileScreen() {
 									borderBottomWidth: 0.5,
 								}}
 							>
-								<Text>Week Start On</Text>
+								<Text>All Tasks</Text>
 								<Icon name="arrow-right" />
 							</TouchableOpacity>
 						</View>
