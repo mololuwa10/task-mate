@@ -145,21 +145,19 @@ export const useLogin = () => {
 export const fetchUserDetails = async (): Promise<UserDetails | null> => {
 	try {
 		const token = await AsyncStorage.getItem("token");
+		const ip = getLocalHost;
 
 		if (!token) {
 			throw new Error("No token found");
 		}
 
-		const response = await fetch(
-			"http://192.168.0.169:5133/api/account/details",
-			{
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
-				},
-			}
-		);
+		const response = await fetch(`http://${ip}:5133/api/account/details`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		});
 
 		if (response.ok) {
 			const responseText = await response.text();
@@ -188,6 +186,7 @@ export const useLogout = () => {
 	const [userDetails, setUserDetails] = useState(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+	// sourcery skip: inline-immediately-returned-variable
 	const handleLogout = async () => {
 		try {
 			await AsyncStorage.removeItem("token");
