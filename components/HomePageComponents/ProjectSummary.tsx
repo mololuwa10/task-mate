@@ -40,7 +40,14 @@ export default function ProjectSummary() {
 	return (
 		<>
 			<View style={{ marginBottom: 20 }}>
-				<Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>
+				<Text
+					style={{
+						fontSize: 18,
+						fontWeight: "bold",
+						marginBottom: 10,
+						color: "#FFFFFF",
+					}}
+				>
 					Project Summary
 				</Text>
 				<View
@@ -53,7 +60,8 @@ export default function ProjectSummary() {
 				>
 					<TouchableOpacity
 						style={{
-							backgroundColor: "#000000",
+							// backgroundColor: "#000000",
+							backgroundColor: "#f2e29b",
 							borderRadius: 10,
 							padding: 20,
 							marginRight: 15,
@@ -70,16 +78,16 @@ export default function ProjectSummary() {
 					>
 						<View style={{ flexGrow: 1, justifyContent: "center" }}>
 							<Text
-								style={{ fontSize: 25, fontWeight: "bold", color: "white" }}
+								style={{ fontSize: 25, fontWeight: "bold", color: "black" }}
 							>
 								{isLoading ? "Loading..." : inProgressCount}
 							</Text>
-							<Text style={{ fontSize: 15, fontWeight: "300", color: "white" }}>
+							<Text style={{ fontSize: 15, fontWeight: "300", color: "black" }}>
 								In Progress
 							</Text>
 						</View>
 
-						<Icon name="arrow-right" size={22} color="white" />
+						<Icon name="arrow-right" size={22} color="black" />
 					</TouchableOpacity>
 
 					<TouchableOpacity

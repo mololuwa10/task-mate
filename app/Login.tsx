@@ -105,7 +105,8 @@ export default function Login() {
 						justifyContent: "center",
 						alignItems: "center",
 						padding: 20,
-						backgroundColor: "#001D24",
+						// backgroundColor: "#001D24",
+						backgroundColor: "#1c1c1c",
 					}}
 				>
 					<TouchableOpacity
@@ -256,7 +257,8 @@ export default function Login() {
 					<TouchableOpacity
 						onPress={handleLogin}
 						style={{
-							backgroundColor: "#66A0AF",
+							// backgroundColor: "#66A0AF",
+							backgroundColor: "#f2e29b",
 							padding: 15,
 							borderRadius: 10,
 							alignItems: "center",
@@ -267,7 +269,7 @@ export default function Login() {
 						{isLoading ? (
 							<ActivityIndicator size="small" color="#ffffff" />
 						) : (
-							<Text style={{ color: "white", fontSize: 18 }}>Login</Text>
+							<Text style={{ color: "#1c1c1c", fontSize: 18 }}>Login</Text>
 						)}
 					</TouchableOpacity>
 				</ScrollView>

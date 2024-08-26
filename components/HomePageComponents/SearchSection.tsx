@@ -23,7 +23,8 @@ export default function SearchSection() {
 			<View
 				style={{
 					flexDirection: "row",
-					backgroundColor: "#fff",
+					// backgroundColor: "#fff",
+					backgroundColor: "#3b3b3b",
 					padding: 10,
 					borderRadius: 15,
 					marginBottom: 20,

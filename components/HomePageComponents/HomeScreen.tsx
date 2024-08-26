@@ -35,7 +35,7 @@ function HomeScreen() {
 		<>
 			<View
 				// colors={["#FAFAFA", "#E0E0E0"]}
-				style={{ flex: 1, backgroundColor: "#FAFAFA" }}
+				style={{ flex: 1, backgroundColor: "#1c1c1c" }}
 			>
 				<ScrollView
 					contentContainerStyle={{
@@ -54,16 +54,24 @@ function HomeScreen() {
 							paddingTop: Platform.OS === "ios" ? 50 : 60,
 						}}
 					>
-						<Icon name="user-circle" size={60} color="#000000" />
+						<Icon name="user-circle" size={60} color="#FFFFFF" />
 						<View style={{ flex: 1, paddingHorizontal: 20 }}>
-							<Text style={{ fontWeight: "300" }}>Welcome Back!</Text>
-							<Text style={{ fontWeight: "bold", fontSize: 16 }}>
+							<Text style={{ fontWeight: "300", color: "#FFFFFF" }}>
+								Welcome Back!
+							</Text>
+							<Text
+								style={{ fontWeight: "bold", fontSize: 16, color: "#FFFFFF" }}
+							>
 								{userDetails?.firstName} {userDetails?.lastName}
 							</Text>
 						</View>
 
 						<TouchableOpacity style={{ justifyContent: "flex-end" }}>
-							<Ionicons name="notifications-outline" size={35} />
+							<Ionicons
+								name="notifications-outline"
+								size={35}
+								color={"#FFFFFF"}
+							/>
 						</TouchableOpacity>
 					</View>
 

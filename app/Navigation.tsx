@@ -5,6 +5,16 @@ import HomeScreen from "../components/HomePageComponents/HomeScreen";
 import { TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ProfileScreen from "@/components/ProfilePageComponents/ProfileScreen";
+import CreateTask from "./CreateTask";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+
+type RootStackParamList = {
+	CreateTask: undefined;
+	// Add other screen names and their respective params here
+};
+
+type NavigationProp = StackNavigationProp<RootStackParamList, "CreateTask">;
 
 function CustomTabBarButton({
 	children,
@@ -28,7 +38,8 @@ function CustomTabBarButton({
 					width: 60,
 					height: 60,
 					borderRadius: 35,
-					backgroundColor: "#000000",
+					// backgroundColor: "#000000",
+					backgroundColor: "#f2e29b",
 					// backgroundColor: "#FF007F",
 					// backgroundColor: "#FFFF",
 				}}
@@ -42,6 +53,7 @@ function CustomTabBarButton({
 const Tab = createBottomTabNavigator();
 
 export default function Navigation() {
+	const navigation = useNavigation<NavigationProp>();
 	return (
 		<>
 			{/* <NavigationContainer> */}
@@ -53,7 +65,8 @@ export default function Navigation() {
 						bottom: 0,
 						// left: 20,
 						// right: 20,
-						backgroundColor: "#fff",
+						// backgroundColor: "#fff",
+						backgroundColor: "#3b3b3b",
 						// backgroundColor: "#222222",
 						// borderRadius: 15,
 						height: 75,
@@ -69,7 +82,7 @@ export default function Navigation() {
 							<Ionicons
 								name="home-outline"
 								size={25}
-								color={focused ? "#222222" : "#000000"}
+								color={focused ? "#fff" : "#948a5f"}
 							/>
 						),
 						headerShown: false,
@@ -83,7 +96,7 @@ export default function Navigation() {
 							<Ionicons
 								name="calendar-outline"
 								size={25}
-								color={focused ? "#222222" : "#000000"}
+								color={focused ? "#fff" : "#948a5f"}
 							/>
 						),
 
@@ -95,9 +108,15 @@ export default function Navigation() {
 					component={HomeScreen}
 					options={{
 						tabBarIcon: ({ focused }) => (
-							<Ionicons name="add" size={35} color="#fff" />
+							<Ionicons name="add" size={35} color="#000" />
 						),
-						tabBarButton: (props) => <CustomTabBarButton {...props} />,
+						tabBarButton: (props) => (
+							<CustomTabBarButton
+								{...props}
+								onPress={() => navigation.navigate("CreateTask")} // Navigate to CreateTask
+							/>
+						),
+						headerShown: false,
 					}}
 				/>
 				<Tab.Screen
@@ -109,7 +128,7 @@ export default function Navigation() {
 								// name="chatbubble-outline"
 								name="notifications-outline"
 								size={25}
-								color={focused ? "#222222" : "#000000"}
+								color={focused ? "#fff" : "#948a5f"}
 							/>
 						),
 						tabBarBadge: 6,
@@ -124,7 +143,7 @@ export default function Navigation() {
 							<Ionicons
 								name="settings-outline"
 								size={25}
-								color={focused ? "#222222" : "#000000"}
+								color={focused ? "#fff" : "#948a5f"}
 							/>
 						),
 						headerShown: false,

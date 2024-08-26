@@ -33,7 +33,8 @@ export default function SignInOptions() {
 					justifyContent: "center",
 					alignItems: "center",
 					padding: 20,
-					backgroundColor: "#001D24",
+					// backgroundColor: "#001D24",
+					backgroundColor: "#1c1c1c",
 				}}
 			>
 				<TouchableOpacity

@@ -105,7 +105,11 @@ export default function Register() {
 
 	return (
 		<KeyboardAvoidingView
-			style={{ flex: 1, backgroundColor: "#001D24" }}
+			style={{
+				flex: 1,
+				// backgroundColor: "#001D24"
+				backgroundColor: "#1c1c1c",
+			}}
 			behavior={Platform.OS === "ios" ? "padding" : "position"}
 		>
 			{/* Header with Back Arrow and Title */}
@@ -258,14 +262,15 @@ export default function Register() {
 				<TouchableOpacity
 					onPress={handleRegister}
 					style={{
-						backgroundColor: "#66A0AF",
+						// backgroundColor: "#66A0AF",
+						backgroundColor: "#f2e29b",
 						padding: 15,
 						borderRadius: 10,
 						alignItems: "center",
 						marginTop: 20,
 					}}
 				>
-					<Text style={{ color: "white", fontSize: 18 }}>Register</Text>
+					<Text style={{ color: "#1c1c1c", fontSize: 18 }}>Register</Text>
 				</TouchableOpacity>
 			</ScrollView>
 		</KeyboardAvoidingView>
