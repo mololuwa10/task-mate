@@ -79,7 +79,7 @@ export const getToDoItems = async () => {
 
 		if (response.ok) {
 			const data: ToDoItemsResponse = await response.json();
-			console.log(data);
+			// console.log(data);
 			return data;
 		} else {
 			Alert.alert("Error", "Failed to fetch tasks");
@@ -108,7 +108,7 @@ export const getToDoItemById = async (id: number) => {
 		});
 		if (response.ok) {
 			const data: ToDoItem = await response.json();
-			console.log(data);
+			// console.log(data);
 			return data;
 		} else {
 			Alert.alert("Error", "Failed to fetch tasks");
@@ -143,7 +143,7 @@ export const getInProgressTasks = async () => {
 
 		if (response.ok) {
 			const data: IsCompletedToDoResponse = await response.json();
-			console.log(data);
+			// console.log(data);
 			return data;
 		} else {
 			Alert.alert("Error", "Failed to fetch tasks");
@@ -175,7 +175,7 @@ export const getCompletedTasks = async () => {
 
 		if (response.ok) {
 			const data: IsCompletedToDoResponse = await response.json();
-			console.log(data);
+			// console.log(data);
 			return data;
 		} else {
 			Alert.alert("Error", "Failed to fetch tasks");
@@ -183,6 +183,35 @@ export const getCompletedTasks = async () => {
 		}
 	} catch (error: any) {
 		console.error("There was an error fetching task: ", error.message);
+		return null;
+	}
+};
+
+// ========================================================
+
+// CATEGORIES =====================================================
+// GET ALL CATEGORIES
+export const getCategories = async () => {
+	try {
+		const ip = getLocalHost;
+		const response = await fetch(`http://${ip}:5133/api/categories`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+
+		if (response.ok) {
+			// sourcery skip: inline-immediately-returned-variable
+			const data = await response.json();
+			console.log(data);
+			return data;
+		} else {
+			Alert.alert("Error", "Failed to fetch categories");
+			return null;
+		}
+	} catch (error: any) {
+		console.error("There was an error fetching categories: ", error.message);
 		return null;
 	}
 };
