@@ -38,6 +38,7 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.16.1",
+    "react-native-image-picker": "^7.1.2",
     "react-native-localhost": "^1.0.0",
     "react-native-picker-select": "^9.3.1",
     "react-native-reanimated": "~3.10.1",
@@ -46,7 +47,8 @@
     "react-native-svg": "^15.6.0",
     "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.10",
-    "task-mate-backup": "file:"
+    "task-mate-backup": "file:",
+    "expo-image-picker": "~15.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -1,36 +1,46 @@
 {
-  "expo": {
-    "name": "task-mate-backup",
-    "slug": "task-mate-backup",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      "expo-router"
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
-  }
+	"expo": {
+		"name": "task-mate-backup",
+		"slug": "task-mate-backup",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/images/icon.png",
+		"scheme": "myapp",
+		"userInterfaceStyle": "automatic",
+		"splash": {
+			"image": "./assets/images/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"expo-image-picker": {
+			"photosPermission": "The app accesses your photos to let you share them with your friends."
+		},
+		"ios": {
+			"supportsTablet": true,
+			"infoPlist": {
+				"NSCameraUsageDescription": "We need access to your camera for you to be able to upload images.",
+				"NSPhotoLibraryUsageDescription": "We need access to your photo library for you to be able to upload images."
+			}
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/images/adaptive-icon.png",
+				"backgroundColor": "#ffffff"
+			},
+			"permissions": [
+				"CAMERA",
+				"WRITE_EXTERNAL_STORAGE",
+				"READ_EXTERNAL_STORAGE"
+			]
+		},
+		"web": {
+			"bundler": "metro",
+			"output": "static",
+			"favicon": "./assets/images/favicon.png"
+		},
+		"plugins": ["expo-router"],
+		"experiments": {
+			"typedRoutes": true
+		}
+	}
 }

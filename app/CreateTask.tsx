@@ -10,6 +10,9 @@ import {
 	TouchableOpacity,
 	StyleSheet,
 	Platform,
+	Image,
+	Alert,
+	Linking,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +21,7 @@ import { getCategories } from "@/lib/dbModel";
 import RNPickerSelect from "react-native-picker-select";
 // import DatePicker from "react-native-date-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import * as ImagePicker from "expo-image-picker";
 
 type RootStackParamList = {
 	Navigation: undefined;
@@ -42,6 +46,37 @@ export default function CreateTask() {
 	const [subTasks, setSubTasks] = useState<SubTask[]>([]);
 	const [date, setDate] = useState(new Date());
 	const [show, setShow] = useState(false);
+
+	const [images, setImages] = useState<string[]>([]);
+
+	const selectImage = async () => {
+		// Request permission if not already granted
+		const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+		if (status !== "granted") {
+			Alert.alert(
+				"Permission required",
+				"Camera roll permissions are required to add images. Do you want to enable them in settings?",
+				[
+					{ text: "Cancel", style: "cancel" },
+					{ text: "Open Settings", onPress: () => Linking.openSettings() },
+				]
+			);
+			return;
+		}
+
+		// Launch image picker if permission is granted
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			allowsEditing: true,
+			aspect: [4, 3],
+			quality: 1,
+		});
+
+		if (!result.canceled && result.assets && result.assets.length > 0) {
+			setImages([...images, result.assets[0].uri]);
+		}
+	};
 
 	const onChange = (event: any, selectedDate: any) => {
 		setShow(Platform.OS === "ios");
@@ -314,10 +349,25 @@ export default function CreateTask() {
 									backgroundColor: "#2c2c2c",
 									justifyContent: "center",
 									alignItems: "center",
+									marginRight: 10,
 								}}
+								onPress={selectImage}
 							>
 								<Icon name="plus" size={20} color="white" />
 							</TouchableOpacity>
+
+							{images.map((uri, index) => (
+								<Image
+									key={index}
+									source={{ uri }}
+									style={{
+										width: 60,
+										height: 60,
+										borderRadius: 10,
+										marginRight: 10,
+									}}
+								/>
+							))}
 						</ScrollView>
 					</View>
 				</ScrollView>
