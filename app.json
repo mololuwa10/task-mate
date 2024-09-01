@@ -13,7 +13,7 @@
 			"backgroundColor": "#ffffff"
 		},
 		"extra": {
-			"apiHost": "192.168.0.22"
+			"apiHost": "192.168.0.76"
 		},
 		"expo-image-picker": {
 			"photosPermission": "The app accesses your photos to let you share them with your friends."

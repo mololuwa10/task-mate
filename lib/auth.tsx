@@ -9,7 +9,6 @@ import axios from "axios";
 import { NetworkInfo } from "react-native-network-info";
 import { Alert } from "react-native";
 import getLocalHost from "react-native-localhost";
-import { getLocalIpAddress } from "./network";
 import * as Network from "expo-network";
 import Constants from "expo-constants";
 

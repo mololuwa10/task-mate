@@ -1,5 +1,5 @@
 "use client";
-// setx /M REACT_NATIVE_PACKAGER_HOSTNAME 192.168.0.22
+// 
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
