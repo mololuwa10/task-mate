@@ -5,24 +5,16 @@ import { ActivityIndicator, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchUserDetails } from "@/lib/auth";
+import Toast from "react-native-toast-message";
+import * as Network from "expo-network";
+import { NetworkInfo } from "react-native-network-info";
+import Config from "react-native-config";
+import Constants from "expo-constants";
 
 export default function Index() {
 	const [loading, setLoading] = useState(true);
 	const [isNewUser, setIsNewUser] = useState(true);
 	const router = useRouter();
-
-	// const fetchApi = async () => {
-	// 	try {
-	// 		const res = await axios.get("http://192.168.0.169:5133");
-	// 		console.log(res.data);
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 	}
-	// };
-
-	// useEffect(() => {
-	// 	fetchApi();
-	// }, []);
 
 	useEffect(() => {
 		const checkAuth = async () => {
@@ -37,19 +29,6 @@ export default function Index() {
 						router.replace("/LaunchScreen");
 					}
 				}
-
-				// if (isNew !== null || isNew !== "true") {
-				// 	// New user, show launch screen
-				// 	setIsNewUser(true);
-				// 	setLoading(false);
-				// 	return;
-				// }
-				// const userDetails = await fetchUserDetails();
-				// if (userDetails) {
-				// 	router.replace("/Navigation");
-				// } else {
-				// 	router.replace("/SignInOptions");
-				// }
 			} catch (error) {
 				console.error("Error checking authentication:", error);
 				router.replace("/Login");
@@ -77,7 +56,12 @@ export default function Index() {
 
 	// return null;
 
-	return <LaunchScreen />;
+	return (
+		<>
+			<LaunchScreen />
+			<Toast />
+		</>
+	);
 
 	// return <Navigation />;
 }

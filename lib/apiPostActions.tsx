@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getLocalHost from "react-native-localhost";
+import { NetworkInfo } from "react-native-network-info";
+import Constants from "expo-constants";
 
 export interface SubTask {
 	subTaskName: string;
@@ -25,12 +27,13 @@ export interface CreateToDoItemsDTO {
 	Recurrence?: Recurrence;
 }
 
+const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
+
 export const postToDoItem = async (
 	toDoItem: CreateToDoItemsDTO,
 	attachments: File[]
 ) => {
 	const token = await AsyncStorage.getItem("token");
-	const ip = getLocalHost;
 
 	if (!token) {
 		throw new Error("No token found");

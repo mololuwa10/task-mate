@@ -22,6 +22,7 @@ import RNPickerSelect from "react-native-picker-select";
 // import DatePicker from "react-native-date-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
+import Toast from "react-native-toast-message";
 
 type RootStackParamList = {
 	Navigation: undefined;
@@ -33,11 +34,11 @@ type CreateTaskNavigationProp = StackNavigationProp<
 >;
 
 export default function CreateTask() {
-	const navigation = useNavigation();
+	const navigation = useNavigation<CreateTaskNavigationProp>();
 	const [taskName, setTaskName] = useState("");
-	const [description, setDescription] = useState("");
+	const [taskDescription, setTaskDescription] = useState("");
 	const [startDate, setStartDate] = useState("");
-	const [endDate, setEndDate] = useState("");
+	const [dueDate, setDueDate] = useState(new Date());
 	const [categories, setCategories] = useState<
 		{ label: string; value: string }[]
 	>([]);
@@ -46,8 +47,8 @@ export default function CreateTask() {
 	const [subTasks, setSubTasks] = useState<SubTask[]>([]);
 	const [date, setDate] = useState(new Date());
 	const [show, setShow] = useState(false);
-
 	const [images, setImages] = useState<string[]>([]);
+	const [subTaskDates, setSubTaskDates] = useState<Date[]>([]);
 
 	const selectImage = async () => {
 		// Request permission if not already granted
@@ -82,6 +83,7 @@ export default function CreateTask() {
 		setShow(Platform.OS === "ios");
 		if (selectedDate) {
 			setDate(selectedDate);
+			setDueDate(selectedDate);
 		}
 	};
 
@@ -100,6 +102,29 @@ export default function CreateTask() {
 		const updatedSubTasks = [...subTasks];
 		updatedSubTasks[index][field] = value;
 		setSubTasks(updatedSubTasks);
+	};
+
+	const updateSubTaskDate = (index: number, selectedDate: Date) => {
+		const updatedDates = [...subTaskDates];
+		updatedDates[index] = selectedDate || new Date();
+		setSubTaskDates(updatedDates);
+	};
+
+	useEffect(() => {
+		setSubTaskDates(subTasks.map(() => new Date()));
+	}, [subTasks]);
+
+	// Function to handle subtask due date change
+	const onSubTaskDateChange = (
+		event: any,
+		selectedDate: Date | undefined,
+		index: number
+	) => {
+		setShow(Platform.OS === "ios");
+		if (selectedDate) {
+			updateSubTaskDate(index, selectedDate);
+			updateSubTask(index, "SubtaskDueDate", selectedDate.toISOString());
+		}
 	};
 
 	// Function to remove a subtask
@@ -126,15 +151,76 @@ export default function CreateTask() {
 	}, []);
 
 	const priorities = [
-		{ label: "High", value: "high" },
-		{ label: "Medium", value: "medium" },
-		{ label: "Low", value: "low" },
+		{ label: "High", value: "High" },
+		{ label: "Medium", value: "Medium" },
+		{ label: "Low", value: "Low" },
 	];
+
+	const handleCreateTask = async () => {
+		// Create a new Date object with specific time
+		const dueDateWithTime = new Date(dueDate);
+		dueDateWithTime.setUTCHours(23, 59, 59, 0); // Set time to 23:59:59 UTC
+
+		// Format the due date to ISO 8601 string
+		const formattedDueDate = dueDateWithTime.toISOString();
+
+		// Prepare the ToDo item data
+		const toDoItem = {
+			TaskName: taskName,
+			TaskDescription: taskDescription,
+			DueDate: formattedDueDate, // Correctly formatted due date
+			Priority: selectedPriority,
+			CategoryId: selectedCategory ? parseInt(selectedCategory) : undefined,
+			Subtasks: subTasks,
+		};
+
+		// Convert image uris to file objects
+		const attachments: File[] = images.map((uri) => {
+			const filename = uri.split("/").pop()!;
+			const fileType = filename.split(".").pop()!;
+			return {
+				uri,
+				name: filename,
+				type: `image/${fileType}`,
+			} as any as File;
+		});
+
+		try {
+			const response = await postToDoItem(toDoItem, attachments);
+
+			if (response.ok) {
+				Toast.show({
+					type: "success",
+					text1: "Task created",
+					text2: "Your task was created successfully",
+				});
+				Alert.alert("Task Created", "Your task was created successfully");
+				navigation.goBack();
+			} else {
+				Toast.show({
+					type: "error",
+					text1: "Task Creation Failed",
+					text2: "An error occurred while creating the task.",
+				});
+				Alert.alert(
+					"Task Creation Failed",
+					"An error occurred while creating the task."
+				);
+			}
+		} catch (error: any) {
+			Toast.show({
+				type: "error",
+				text1: "Task Creation Failed",
+				text2: error.message,
+			});
+		}
+	};
 
 	return (
 		<>
 			<View style={{ flex: 1, backgroundColor: "#1c1c1c" }}>
 				<ScrollView style={{ flex: 1 }}>
+					{/* Header */}
 					<View
 						style={{
 							flexDirection: "row",
@@ -178,8 +264,8 @@ export default function CreateTask() {
 							placeholder="Hey guys! 👋\nMake wireframe first & complete this task asap! Send me update daily!"
 							placeholderTextColor="#777"
 							multiline={true}
-							value={description}
-							onChangeText={setDescription}
+							value={taskDescription}
+							onChangeText={setTaskDescription}
 						/>
 
 						<Text style={styles.label}>Due Date</Text>
@@ -194,15 +280,16 @@ export default function CreateTask() {
 							}}
 							onPress={() => setShow(true)}
 						>
+							<Icon name="calendar" size={20} color="white" />
+
 							<TextInput
 								style={styles.input}
 								// placeholder="August 25, 2023"
 								placeholderTextColor="#777"
-								value={date.toDateString()}
-								// onChangeText={setEndDate}
+								value={dueDate ? dueDate.toDateString() : "Select Due Date"}
+								onChangeText={setDueDate}
 								editable={false} // Assuming you'll implement a date picker here
 							/>
-							<Icon name="calendar" size={20} color="white" />
 						</TouchableOpacity>
 
 						{show && (
@@ -303,14 +390,29 @@ export default function CreateTask() {
 										// placeholder="August 12, 2023"
 										placeholder={`Due Date ${index + 1}`}
 										placeholderTextColor="#777"
-										value={subtask.SubtaskDueDate}
+										value={
+											subTaskDates[index]
+												? subTaskDates[index].toDateString()
+												: "Select Date"
+										}
 										onChangeText={(text) =>
 											updateSubTask(index, "SubtaskDueDate", text)
 										}
-										editable={false} // Assuming you'll implement a date picker here
+										editable={false}
 									/>
 									<Icon name="calendar" size={20} color="white" />
 								</TouchableOpacity>
+
+								{show && (
+									<DateTimePicker
+										value={subTaskDates[index] || new Date()}
+										mode="date"
+										display="default"
+										onChange={(event, selectedDate) =>
+											onSubTaskDateChange(event, selectedDate, index)
+										}
+									/>
+								)}
 
 								<TouchableOpacity onPress={() => removeSubtask(index)}>
 									<Icon name="trash" size={20} color="red" />
@@ -383,6 +485,7 @@ export default function CreateTask() {
 						borderRadius: 10,
 						alignItems: "center",
 					}}
+					onPress={handleCreateTask}
 				>
 					<Text style={{ color: "#1c1c1c", fontSize: 16, fontWeight: "bold" }}>
 						Create Task

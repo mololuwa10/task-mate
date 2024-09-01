@@ -1,9 +1,11 @@
 "use client";
-// npm start
+// setx /M REACT_NATIVE_PACKAGER_HOSTNAME 192.168.0.22
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 import getLocalHost from "react-native-localhost";
+import { NetworkInfo } from "react-native-network-info";
+import Constants from "expo-constants";
 
 interface SubTask {
 	subTaskId: number;
@@ -58,11 +60,13 @@ export interface IsCompletedToDoResponse {
 	};
 }
 
+const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
+
 // TO DO ITEMS ===================================================================
 // GET ALL TASKS
 export const getToDoItems = async () => {
 	const token = await AsyncStorage.getItem("token");
-	const ip = getLocalHost;
+	// const ip = getLocalHost;
 
 	if (!token) {
 		throw new Error("No token found");
@@ -94,7 +98,7 @@ export const getToDoItems = async () => {
 // GET ALL TASKS BY ID
 export const getToDoItemById = async (id: number) => {
 	const token = await AsyncStorage.getItem("token");
-	const ip = getLocalHost;
+	// const ip = getLocalHost;
 	if (!token) {
 		throw new Error("No token found");
 	}
@@ -123,7 +127,7 @@ export const getToDoItemById = async (id: number) => {
 // GET ALL TASK BY IS-COMPLETED (FALSE)
 export const getInProgressTasks = async () => {
 	const token = await AsyncStorage.getItem("token");
-	const ip = getLocalHost;
+	// const ip = getLocalHost;
 
 	if (!token) {
 		throw new Error("No token found");
@@ -158,7 +162,7 @@ export const getInProgressTasks = async () => {
 // GET ALL TASK BY IS-COMPLETED (TRUE)
 export const getCompletedTasks = async () => {
 	const token = await AsyncStorage.getItem("token");
-	const ip = getLocalHost;
+	// const ip = getLocalHost;
 
 	if (!token) {
 		throw new Error("No token found");
@@ -193,7 +197,7 @@ export const getCompletedTasks = async () => {
 // GET ALL CATEGORIES
 export const getCategories = async () => {
 	try {
-		const ip = getLocalHost;
+		// const ip = getLocalHost;
 		const response = await fetch(`http://${ip}:5133/api/categories`, {
 			method: "GET",
 			headers: {

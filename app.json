@@ -12,6 +12,9 @@
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
+		"extra": {
+			"apiHost": "192.168.0.22"
+		},
 		"expo-image-picker": {
 			"photosPermission": "The app accesses your photos to let you share them with your friends."
 		},

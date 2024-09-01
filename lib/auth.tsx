@@ -6,8 +6,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { NetworkInfo } from "react-native-network-info";
 import { Alert } from "react-native";
 import getLocalHost from "react-native-localhost";
+import { getLocalIpAddress } from "./network";
+import * as Network from "expo-network";
+import Constants from "expo-constants";
 
 type RootStackParamList = {
 	Login: undefined;
@@ -34,13 +38,6 @@ export interface UserDetails {
 	emailConfirmed: boolean;
 }
 
-// export const getApiBaseUrl = async () => {
-// 	const ip = getLocalHost;
-// 	console.log(ip);
-// 	const port = "5133";
-// 	return `http://${ip}:${port}/api`;
-// };
-
 axios.interceptors.request.use(
 	(request) => {
 		console.log("Starting Request", request);
@@ -63,9 +60,24 @@ axios.interceptors.response.use(
 	}
 );
 
+// export const getApiBaseUrl = async () => {
+// 	const ip = await getLocalIpAddress();
+// 	const port = "5133";
+// 	return `http://${ip}:${port}/api`;
+// };
+// const ip = NetworkInfo.getIPV4Address();
+// console.log(ip);
+
+// const ip = getLocalIpAddress();
+// const ip = Network.getIpAddressAsync();
+// console.log(ip);
+
+const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
+
 export const registerUser = async (userData: any) => {
 	try {
-		const ip = getLocalHost;
+		// const ip = getLocalHost;
+
 		const response = await fetch(`http://${ip}:5133/api/account/register`, {
 			method: "POST",
 			headers: {
@@ -101,9 +113,11 @@ export const useLogin = () => {
 
 	const login = async (usernameOrEmail: string, password: string) => {
 		try {
-			// Log the data being sent
+			console.log("IP Address being used in login:", ip);
+
 			console.log("Sending data:", { usernameOrEmail, password });
-			const ip = getLocalHost;
+			// const ip = getLocalHost;
+			console.log("ip", ip);
 
 			const response = await fetch(`http://${ip}:5133/api/account/login`, {
 				method: "POST",
@@ -145,7 +159,6 @@ export const useLogin = () => {
 export const fetchUserDetails = async (): Promise<UserDetails | null> => {
 	try {
 		const token = await AsyncStorage.getItem("token");
-		const ip = getLocalHost;
 
 		if (!token) {
 			throw new Error("No token found");
