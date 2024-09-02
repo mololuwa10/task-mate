@@ -59,7 +59,7 @@ export default function Index() {
 	return (
 		<>
 			<LaunchScreen />
-			<Toast />
+			{/* <Toast /> */}
 		</>
 	);
 

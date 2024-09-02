@@ -16,6 +16,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useLogin } from "@/lib/auth";
+import Toast from "react-native-toast-message";
 
 type RootStackParamList = {
 	Navigation: undefined;
@@ -72,17 +73,27 @@ export default function Login() {
 		// navigation.navigate("Navigation");
 		try {
 			await login(email, password);
-			setConfirmationMessage("Login successful!");
-			setConfirmationMessage("");
+			// setConfirmationMessage("Login successful!");
+			// setConfirmationMessage("");
+			Toast.show({
+				type: "success",
+				text1: "Login Successful",
+				text2: "Welcome back!",
+			});
 			// Alert.alert("Login Successful");
 			setErrorMessage("");
 			setIsLoading(false);
 			navigation.navigate("Navigation");
 		} catch (e) {
 			setConfirmationMessage("");
-			setErrorMessage(
-				"Login failed. Please check your credentials and try again."
-			);
+			Toast.show({
+				type: "error",
+				text1: "Login Failed",
+				text2: "Please check your credentials and try again.",
+			});
+			// setErrorMessage(
+			// 	"Login failed. Please check your credentials and try again."
+			// );
 			setIsLoading(false);
 			console.error("Login failed:", e);
 		}
@@ -212,7 +223,7 @@ export default function Login() {
 							</TouchableOpacity>
 						)}
 
-						{errorMessage ? (
+						{/* {errorMessage ? (
 							<Text style={{ color: "red", marginTop: 10 }}>
 								{errorMessage}
 							</Text>
@@ -222,7 +233,7 @@ export default function Login() {
 							<Text style={{ color: "green", marginTop: 10 }}>
 								{confirmationMessage}
 							</Text>
-						) : null}
+						) : null} */}
 					</View>
 
 					<View
