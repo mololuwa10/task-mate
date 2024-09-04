@@ -19,7 +19,6 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getCategories } from "@/lib/dbModel";
 import RNPickerSelect from "react-native-picker-select";
-// import DatePicker from "react-native-date-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";

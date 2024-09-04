@@ -14,6 +14,8 @@ import { Ionicons } from "@expo/vector-icons";
 import SearchSection from "./SearchSection";
 import ProductivitySection from "./ProductivitySection";
 import ProjectSummary from "./ProjectSummary";
+import OngoingSection from "./OngoingSection";
+import TaskProgressCards from "./TaskProgressCards";
 // import LinearGradient from "react-native-linear-gradient";
 
 function HomeScreen() {
@@ -75,14 +77,37 @@ function HomeScreen() {
 						</TouchableOpacity>
 					</View>
 
+					<View style={{ marginBottom: 15 }}>
+						<Text
+							style={{ color: "#FFFFFF", fontSize: 25, fontWeight: "semibold" }}
+						>
+							Manage Your{" "}
+							<Text
+								style={{
+									color: "#f2e29b",
+									fontSize: 25,
+									fontWeight: "semibold",
+								}}
+							>
+								Daily Tasks
+							</Text>
+						</Text>
+					</View>
+
 					{/* Search Icon */}
 					<SearchSection />
+
+					{/* Task Progress Cards */}
+					<TaskProgressCards />
 
 					{/* Productivity Section */}
 					{/* <ProductivitySection /> */}
 
 					{/* Project Summary */}
 					<ProjectSummary />
+
+					{/* Ongoing Section */}
+					<OngoingSection />
 				</ScrollView>
 			</View>
 		</>

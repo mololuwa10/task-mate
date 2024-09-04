@@ -48,7 +48,7 @@ export default function SearchSection() {
 						backgroundColor: "transparent",
 					}}
 					inputStyle={{
-						color: "#000",
+						color: "#fff",
 						fontSize: 16,
 					}}
 					searchIcon={false}
