@@ -124,7 +124,7 @@ export default function OngoingSection() {
 								style={{
 									backgroundColor: "#303030",
 									borderRadius: 15,
-									padding: 20,
+									padding: 21,
 									marginRight: 15,
 									shadowColor: "#000",
 									shadowOffset: { width: 0, height: 2 },
