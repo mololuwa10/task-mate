@@ -9,11 +9,14 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    ```bash
    npm install
    ```
+2. Configure your netwrok ip address to react native
+   - Open Windows Powershell as administrator and run the following command - setx /M REACT_NATIVE_PACKAGER_HOSTNAME your_ip_address
+   - You can get your Ipv4 address by typing in "ipconfig" in cmd or powershell
 
-2. Start the app
+3. Start the app
 
    ```bash
-    npx expo start
+    npx expo start || npm start
    ```
 
 In the output, you'll find options to open the app in a
