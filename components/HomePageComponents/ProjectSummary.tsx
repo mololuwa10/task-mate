@@ -1,7 +1,8 @@
 import { View, Text, Dimensions, TouchableOpacity, Alert } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Svg, { Path } from "react-native-svg";
 import { Icon } from "react-native-elements";
+import { useFocusEffect } from "@react-navigation/native";
 
 import {
 	getInProgressTasks,
@@ -16,26 +17,36 @@ export default function ProjectSummary() {
 	const [completedCount, setCompletedCount] = useState<number>(0);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	useEffect(() => {
-		const fetchTasks = async () => {
-			try {
-				const inProgressTasksResponse = await getInProgressTasks();
-				const completedTasksResponse = await getCompletedTasks();
+	useFocusEffect(
+		useCallback(() => {
+			let isMounted = true; // Helps to prevent setting state after unmount
 
-				if (inProgressTasksResponse && completedTasksResponse) {
-					setInProgressCount(inProgressTasksResponse.count);
-					setCompletedCount(completedTasksResponse.count);
+			const fetchTasks = async () => {
+				try {
+					const inProgressTasksResponse = await getInProgressTasks();
+					const completedTasksResponse = await getCompletedTasks();
+
+					if (isMounted && inProgressTasksResponse && completedTasksResponse) {
+						setInProgressCount(inProgressTasksResponse.count);
+						setCompletedCount(completedTasksResponse.count);
+					}
+				} catch (error: any) {
+					console.error("Error fetching tasks: ", error.message);
+				} finally {
+					if (isMounted) {
+						setIsLoading(false);
+					}
 				}
-			} catch (error: any) {
-				console.error("Error fetching tasks: ", error.message);
-				// Alert.alert("Error", "Failed to fetch tasks");
-			} finally {
-				setIsLoading(false);
-			}
-		};
+			};
 
-		fetchTasks();
-	}, []);
+			fetchTasks();
+
+			// Cleanup function when screen is unfocused
+			return () => {
+				isMounted = false;
+			};
+		}, [])
+	);
 
 	return (
 		<>

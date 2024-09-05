@@ -3,8 +3,9 @@ import { Text, View, Dimensions, TouchableOpacity } from "react-native";
 import SideSwipe from "react-native-sideswipe";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { getToDoItems, ToDoItemsResponse } from "@/lib/dbModel";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import moment from "moment";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function OngoingSection() {
 	const { width } = Dimensions.get("window");
@@ -32,60 +33,68 @@ export default function OngoingSection() {
 				return "gray"; // Default color if priority is undefined
 		}
 	};
-	useEffect(() => {
-		const fetchToDoItems = async () => {
-			try {
-				const response = await getToDoItems();
-				if (response && response.$values) {
-					// Filter out tasks that are not completed
-					const ongoingTasks = response.$values.filter(
-						(task) => !task.isCompleted
-					);
+	useFocusEffect(
+		useCallback(() => {
+			let isMounted = true;
 
-					// Sort tasks by earliest due date
-					const sortedTasks = ongoingTasks.sort((a, b) => {
-						const dateA = new Date(a.dueDate).getTime();
-						const dateB = new Date(b.dueDate).getTime();
-						return dateA - dateB; // Sort in ascending order
-					});
+			const fetchToDoItems = async () => {
+				try {
+					const response = await getToDoItems();
+					if (response && response.$values) {
+						// Filter out tasks that are not completed
+						const ongoingTasks = response.$values.filter(
+							(task) => !task.isCompleted
+						);
 
-					// Map the ongoing tasks to the card structure
-					const cardData = sortedTasks
-						.map((task) => ({
-							id: task.taskId,
-							priority: task.priority,
-							priorityColor: getPriorityColor(task.priority),
-							textColor: task.priority === "High" ? "white" : "black",
-							title: task.taskName,
-							time:
-								moment(task.dateCreated).format("DD/MM/YYYY h:mm A") +
-								" - " +
-								moment(task.dueDate).format("DD/MM/YYYY h:mm A"),
-							dueDate: moment(task.dueDate).format("MMMM D, YYYY"),
-						}))
-						.slice(0, 4);
+						// Sort tasks by earliest due date
+						const sortedTasks = ongoingTasks.sort((a, b) => {
+							const dateA = new Date(a.dueDate).getTime();
+							const dateB = new Date(b.dueDate).getTime();
+							return dateA - dateB; // Sort in ascending order
+						});
 
-					// Add a spacer at the end
-					setCards([
-						...cardData,
-						{
-							id: "spacer",
-							priority: "",
-							priorityColor: "",
-							textColor: "",
-							title: "",
-							time: "",
-							dueDate: "",
-						},
-					]);
+						// Map the ongoing tasks to the card structure
+						const cardData = sortedTasks
+							.map((task) => ({
+								id: task.taskId,
+								priority: task.priority,
+								priorityColor: getPriorityColor(task.priority),
+								textColor: task.priority === "High" ? "white" : "black",
+								title: task.taskName,
+								time:
+									moment(task.dateCreated).format("DD/MM/YYYY h:mm A") +
+									" - " +
+									moment(task.dueDate).format("DD/MM/YYYY h:mm A"),
+								dueDate: moment(task.dueDate).format("MMMM D, YYYY"),
+							}))
+							.slice(0, 4);
+
+						// Add a spacer at the end
+						setCards([
+							...cardData,
+							{
+								id: "spacer",
+								priority: "",
+								priorityColor: "",
+								textColor: "",
+								title: "",
+								time: "",
+								dueDate: "",
+							},
+						]);
+					}
+					console.log(response);
+				} catch (error) {
+					console.error("Error fetching to-do items:", error);
 				}
-				console.log(response);
-			} catch (error) {
-				console.error("Error fetching to-do items:", error);
-			}
-		};
-		fetchToDoItems();
-	}, []);
+			};
+			fetchToDoItems();
+
+			return () => {
+				isMounted = false;
+			};
+		}, [])
+	);
 
 	return (
 		<>

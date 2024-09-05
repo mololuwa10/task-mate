@@ -54,7 +54,7 @@ function ProfileScreen() {
 
 	return (
 		<>
-			<View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
+			<View style={{ flex: 1, backgroundColor: "#1c1c1c" }}>
 				<View
 					style={{
 						flexDirection: "row",
@@ -67,14 +67,14 @@ function ProfileScreen() {
 					}}
 				>
 					<TouchableOpacity onPress={() => navigation.goBack()}>
-						<Icon name="arrow-left" size={22} color="black" />
+						<Icon name="arrow-left" size={22} color="white" />
 					</TouchableOpacity>
 					<View style={{ flex: 1, alignItems: "center" }}>
 						<Text
 							style={{
 								fontSize: 18,
 								fontWeight: "bold",
-								color: "black",
+								color: "white",
 								textAlign: "center",
 							}}
 						>
@@ -96,11 +96,18 @@ function ProfileScreen() {
 				>
 					{/* User Info Section */}
 					<View style={{ alignItems: "center", marginVertical: 20 }}>
-						<Icon name="user-circle" size={100} color="#000000" />
-						<Text style={{ fontSize: 24, fontWeight: "bold", marginTop: 10 }}>
+						<Icon name="user-circle" size={100} color="#fff" />
+						<Text
+							style={{
+								fontSize: 24,
+								fontWeight: "bold",
+								marginTop: 10,
+								color: "#fff",
+							}}
+						>
 							{userDetails?.firstName} {userDetails?.lastName}
 						</Text>
-						<Text style={{ color: "#888", marginBottom: 20 }}>
+						<Text style={{ color: "#fff", marginBottom: 20 }}>
 							{userDetails ? userDetails.email : ""}
 						</Text>
 					</View>
@@ -108,13 +115,18 @@ function ProfileScreen() {
 					{/* General Settings */}
 					<View>
 						<Text
-							style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}
+							style={{
+								fontSize: 18,
+								fontWeight: "700",
+								marginBottom: 10,
+								color: "#fff",
+							}}
 						>
 							General
 						</Text>
 						<View
 							style={{
-								backgroundColor: "white",
+								backgroundColor: "#303030",
 								padding: 15,
 								borderRadius: 10,
 								marginBottom: 10,
@@ -130,8 +142,8 @@ function ProfileScreen() {
 									borderBottomWidth: 0.5,
 								}}
 							>
-								<Text>Personal Info</Text>
-								<Icon name="arrow-right" />
+								<Text style={{ color: "#fff" }}>Personal Info</Text>
+								<Icon color={"#fff"} name="arrow-right" />
 							</TouchableOpacity>
 
 							<TouchableOpacity
@@ -143,7 +155,7 @@ function ProfileScreen() {
 									borderBottomWidth: 0.5,
 								}}
 							>
-								<Text>Dark Mode</Text>
+								<Text style={{ color: "#fff" }}>Dark Mode</Text>
 								<Switch
 									value={isDarkMode}
 									onValueChange={() => setIsDarkMode(!isDarkMode)}
@@ -159,8 +171,8 @@ function ProfileScreen() {
 									borderBottomWidth: 0.5,
 								}}
 							>
-								<Text>All Tasks</Text>
-								<Icon name="arrow-right" />
+								<Text style={{ color: "#fff" }}>All Tasks</Text>
+								<Icon color={"#fff"} name="arrow-right" />
 							</TouchableOpacity>
 						</View>
 					</View>
@@ -168,13 +180,18 @@ function ProfileScreen() {
 					{/* Support Section */}
 					<View style={{ marginTop: 10 }}>
 						<Text
-							style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}
+							style={{
+								fontSize: 18,
+								fontWeight: "700",
+								color: "#fff",
+								marginBottom: 10,
+							}}
 						>
 							Support
 						</Text>
 						<View
 							style={{
-								backgroundColor: "white",
+								backgroundColor: "#303030",
 								padding: 15,
 								borderRadius: 10,
 								marginBottom: 10,
@@ -190,8 +207,8 @@ function ProfileScreen() {
 									borderBottomWidth: 0.5,
 								}}
 							>
-								<Text>Help Center</Text>
-								<Icon name="arrow-right" />
+								<Text style={{ color: "#fff" }}>Help Center</Text>
+								<Icon color={"#fff"} name="arrow-right" />
 							</TouchableOpacity>
 
 							<TouchableOpacity
@@ -204,8 +221,8 @@ function ProfileScreen() {
 									borderBottomWidth: 0.5,
 								}}
 							>
-								<Text>Contact Us</Text>
-								<Icon name="arrow-right" />
+								<Text style={{ color: "#fff" }}>Contact Us</Text>
+								<Icon color={"#fff"} name="arrow-right" />
 							</TouchableOpacity>
 						</View>
 					</View>
@@ -213,13 +230,18 @@ function ProfileScreen() {
 					{/* General Settings */}
 					<View style={{ marginTop: 10 }}>
 						<Text
-							style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}
+							style={{
+								fontSize: 18,
+								fontWeight: "700",
+								color: "#fff",
+								marginBottom: 10,
+							}}
 						>
 							Account
 						</Text>
 						<View
 							style={{
-								backgroundColor: "white",
+								backgroundColor: "#303030",
 								padding: 15,
 								borderRadius: 10,
 								marginBottom: 10,
@@ -236,8 +258,8 @@ function ProfileScreen() {
 								}}
 								onPress={handleLogout}
 							>
-								<Text style={{ color: "red" }}>Logout</Text>
-								<Icon name="sign-out" size={20} />
+								<Text style={{ color: "white" }}>Logout</Text>
+								<Icon name="sign-out" color={"white"} size={20} />
 							</TouchableOpacity>
 
 							<TouchableOpacity
@@ -251,8 +273,8 @@ function ProfileScreen() {
 								}}
 								onPress={handleDeleteAccount}
 							>
-								<Text style={{ color: "red" }}>Delete Account</Text>
-								<Icon name="trash" size={20} />
+								<Text style={{ color: "white" }}>Delete Account</Text>
+								<Icon name="trash" color={"white"} size={20} />
 							</TouchableOpacity>
 						</View>
 					</View>

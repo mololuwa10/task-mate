@@ -187,13 +187,14 @@ export default function CreateTask() {
 		try {
 			const response = await postToDoItem(toDoItem, attachments);
 
-			if (response.ok) {
+			if (response) {
+				// Assuming if response is truthy, the task was created successfully
 				Toast.show({
 					type: "success",
 					text1: "Task created",
 					text2: "Your task was created successfully",
 				});
-				Alert.alert("Task Created", "Your task was created successfully");
+				// Alert.alert("Task Created", "Your task was created successfully");
 				navigation.goBack();
 			} else {
 				Toast.show({
