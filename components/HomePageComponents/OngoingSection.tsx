@@ -5,9 +5,24 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { getToDoItems, ToDoItemsResponse } from "@/lib/dbModel";
 import { useEffect, useState, useCallback } from "react";
 import moment from "moment";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+
+type RootStackParamList = {
+	TaskList: undefined;
+	CreateTask: undefined;
+	// Add other screen names and their respective params here
+};
+
+type NavigationProp = StackNavigationProp<
+	RootStackParamList,
+	"TaskList",
+	"CreateTask"
+>;
 
 export default function OngoingSection() {
+	const navigation = useNavigation<NavigationProp>();
+
 	const { width } = Dimensions.get("window");
 	const [cards, setCards] = useState<
 		Array<{
@@ -110,7 +125,7 @@ export default function OngoingSection() {
 						Ongoing Task
 					</Text>
 
-					<TouchableOpacity>
+					<TouchableOpacity onPress={() => navigation.navigate("TaskList")}>
 						<Text style={{ color: "#f2e29b" }}>See all</Text>
 					</TouchableOpacity>
 				</View>

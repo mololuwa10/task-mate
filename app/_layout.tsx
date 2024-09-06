@@ -25,6 +25,13 @@ export default function RootLayout() {
 						...TransitionPresets.SlideFromRightIOS,
 					}}
 				/>
+				<Stack.Screen
+					name="TaskList"
+					options={{
+						headerShown: false,
+						...TransitionPresets.SlideFromRightIOS,
+					}}
+				/>
 			</Stack>
 			<Toast />
 		</>

@@ -1,67 +1,80 @@
 Phase 1: Core Features and Basic Functionality
 1. Task Management (Week 1-2)
 
-Add Tasks: Implement the basic ability to add tasks.
-Edit Tasks: Allow modification of existing tasks.
-Delete Tasks: Enable task removal.
-Mark as Complete: Implement functionality to mark tasks as completed.
-Task Details: Provide a view for detailed task information.
+Add Tasks: Implement the basic ability to add tasks. (DONE)
+Edit Tasks: Allow modification of existing tasks. (DONE)
+Delete Tasks: Enable task removal. (DONE)
+Mark as Complete: Implement functionality to mark tasks as completed. (DONE)
+Task Details: Provide a view for detailed task information. (DONE ON THE BACKEND)
+
 2. Task Organization (Week 3)
 
 Categorization: Develop functionality to organize tasks into categories or projects.
 Due Dates: Implement due dates for tasks.
 Priority Levels: Set up priority levels for tasks.
+
 3. User Authentication (Week 4)
 
-Sign Up/Login: Create the ability for users to sign up and log in.
+Sign Up/Login: Create the ability for users to sign up and log in. (DONE)
 User Profiles: Develop basic user profiles and preferences.
+
 Phase 2: Enhanced Functionality and User Experience
 4. Advanced Task Management (Week 5-6)
 
-Subtasks: Allow tasks to be broken down into subtasks.
-Recurring Tasks: Implement recurring task functionality.
-Attachments: Enable file/image attachments to tasks.
+Subtasks: Allow tasks to be broken down into subtasks. (DONE)
+Recurring Tasks: Implement recurring task functionality. (DONE)
+Attachments: Enable file/image attachments to tasks. (DONE)
+
 5. Notifications and Reminders (Week 7)
 
 Push Notifications: Implement push notifications for reminders.
 Email Notifications: Provide an option for email reminders.
+
 6. Collaboration (Week 8)
 
 Shared Lists: Allow users to share task lists with others.
 Comments: Implement commenting on tasks.
 Activity Log: Track changes and updates made by collaborators.
 Phase 3: Customization and Productivity Tools
+
 7. Customization (Week 9)
 
 Themes: Allow users to choose from different themes.
 Customizable Lists: Enable creation of custom task lists with unique settings.
+
 8. Productivity Tools (Week 10)
 
 Pomodoro Timer: Integrate a Pomodoro timer.
 Time Tracking: Implement time tracking for tasks.
+
 Phase 4: Data Management and Advanced Features
 9. Data Sync and Backup (Week 11)
 
 Cloud Sync: Implement data syncing across devices.
 Backup and Restore: Enable backup and restore functionality.
+
 10. Analytics and Reports (Week 12)
 
 Statistics: Provide insights into task completion rates and productivity.
 Export Data: Allow users to export task data in various formats.
+
 11. Integrations (Week 13-14)
 
 Calendar Integration: Sync tasks with external calendars.
 Third-Party Services: Integrate with services like Trello, Slack, or Evernote.
+
 Phase 5: Accessibility and Final Touches
 12. Accessibility (Week 15)
 
 Voice Input: Add voice input functionality.
 Screen Reader Support: Ensure support for screen readers.
+
 13. Testing and Final Adjustments (Week 16)
 
 Bug Fixing: Identify and fix bugs.
 User Feedback: Collect and implement user feedback.
 Polishing: Finalize UI/UX and overall app performance.
+
 Daily Task Breakdown
 Day 1-3: Set up project structure and development environment.
 Day 4-10: Work on the core features (Task Management).
@@ -77,3 +90,19 @@ Day 42-44: Build Analytics and Reports.
 Day 45-48: Work on Integrations.
 Day 49-51: Implement Accessibility features.
 Day 52-56: Conduct Testing and make Final Adjustments.
+
+
+Friends Page:
+A page dedicated to managing friend connections where users can search for, add, and manage their friends.
+
+Activity Feed:
+A feed where users can see what their friends are up to (e.g., tasks they've completed, tasks in progress, or milestones reached).
+
+Leaderboard / Progress Tracker:
+A page displaying a leaderboard showing user progress, like the number of tasks completed, to foster a sense of competition or shared motivation.
+
+Task Sharing:
+A feature that allows users to share specific tasks or goals with friends to collaborate or motivate each other.
+
+Messages / Notifications:
+A page where users can send/receive messages or notifications from their friends about tasks, reminders, or milestones.

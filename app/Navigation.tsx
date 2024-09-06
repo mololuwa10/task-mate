@@ -8,6 +8,8 @@ import ProfileScreen from "@/components/ProfilePageComponents/ProfileScreen";
 import CreateTask from "./CreateTask";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Hamburger from "hamburger-react";
+import MoreSection from "@/components/ProfilePageComponents/MoreSection";
 
 type RootStackParamList = {
 	CreateTask: undefined;
@@ -120,6 +122,22 @@ export default function Navigation() {
 					}}
 				/>
 				<Tab.Screen
+					name="Chat"
+					component={HomeScreen}
+					options={{
+						tabBarIcon: ({ focused }) => (
+							<Ionicons
+								name="chatbubble-outline"
+								// name="notifications-outline"
+								size={25}
+								color={focused ? "#fff" : "#948a5f"}
+							/>
+						),
+						tabBarBadge: 6,
+						headerShown: false,
+					}}
+				/>
+				{/* <Tab.Screen
 					name="Messages"
 					component={HomeScreen}
 					options={{
@@ -134,17 +152,19 @@ export default function Navigation() {
 						tabBarBadge: 6,
 						headerShown: false,
 					}}
-				/>
+				/> */}
 				<Tab.Screen
 					name="Profile"
-					component={ProfileScreen}
+					component={MoreSection}
 					options={{
 						tabBarIcon: ({ focused }) => (
 							<Ionicons
-								name="settings-outline"
-								size={25}
+								// name="settings-outline"
+								name="menu-outline"
+								size={40}
 								color={focused ? "#fff" : "#948a5f"}
 							/>
+							// <Hamburger onToggle={(toggled) => {}} />
 						),
 						headerShown: false,
 					}}
