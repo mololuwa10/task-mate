@@ -19,8 +19,7 @@ export default function ThirdSection() {
 						console.log("Settings");
 					}}
 				>
-					{/* checklist icon */}
-
+					{/* Checklist icon */}
 					<Ionicons
 						name="settings-outline"
 						size={35}

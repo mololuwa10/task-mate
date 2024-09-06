@@ -1,8 +1,25 @@
 import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+
+import { StackNavigationProp } from "@react-navigation/stack";
+
+type RootStackParamList = {
+	TaskList: undefined;
+	// CreateTask: undefined;
+	// Add other screen names and their respective params here
+};
+
+type NavigationProp = StackNavigationProp<
+	RootStackParamList,
+	"TaskList"
+	// "CreateTask"
+>;
 
 export default function SecondSection() {
+	const navigation = useNavigation<NavigationProp>();
+
 	return (
 		<>
 			{/* Second section */}
@@ -16,7 +33,7 @@ export default function SecondSection() {
 						marginStart: 10,
 					}}
 					onPress={() => {
-						console.log("Settings");
+						navigation.navigate("TaskList");
 					}}
 				>
 					{/* checklist icon */}

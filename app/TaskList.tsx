@@ -1,5 +1,12 @@
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	ScrollView,
+	Dimensions,
+} from "react-native";
+import SideSwipe from "react-native-sideswipe";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import TaskStatusHeader from "@/components/TaskListComponents/TaskStatusHeader";
@@ -15,26 +22,52 @@ type NavigationProp = StackNavigationProp<
 	"TaskList",
 	"CreateTask"
 >;
+
+const data = [
+	{ id: "1", label: "All", count: 105, isActive: true },
+	{ id: "2", label: "Complete", count: 65, isActive: false },
+	{ id: "3", label: "In Progress", count: 45, isActive: false },
+];
+
 export default function TaskList() {
 	const navigation = useNavigation<NavigationProp>();
+	const { width } = Dimensions.get("window");
 
 	return (
 		<View style={{ flex: 1, backgroundColor: "#1c1c1c" }}>
-			{/* <View style={{}}>
+			<View style={{ flexDirection: "row", padding: 20 }}>
 				<Text
 					style={{
 						fontSize: 24,
 						fontWeight: "bold",
-						padding: 20,
 						color: "#fff",
+						marginStart: 10,
+						marginTop: 20,
 					}}
 				>
 					Task List
 				</Text>
-			</View> */}
+			</View>
 			<View style={{ flexDirection: "row", padding: 20 }}>
-				<TaskStatusHeader label="Complete" count={65} isActive={true} />
-				<TaskStatusHeader label="In Progress" count={45} isActive={false} />
+				<SideSwipe
+					data={data}
+					itemWidth={width * 0.85}
+					contentContainerStyle={{
+						// paddingTop: -20,
+						paddingBottom: 20,
+						paddingEnd: 10,
+					}}
+					style={{ width }}
+					threshold={120}
+					renderItem={({ item }) => (
+						<TaskStatusHeader
+							key={item.id}
+							label={item.label}
+							count={item.count}
+							isActive={item.isActive}
+						/>
+					)}
+				/>
 			</View>
 
 			<ScrollView style={{ flex: 1 }}>

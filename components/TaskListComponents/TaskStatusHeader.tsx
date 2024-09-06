@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
 		paddingVertical: 20,
 		borderWidth: 1,
 		marginRight: 10,
-		marginTop: 30,
 		width: 170,
 	},
 	label: {

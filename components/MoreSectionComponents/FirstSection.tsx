@@ -2,6 +2,19 @@ import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { fetchUserDetails, UserDetails } from "@/lib/auth";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { StackNavigationProp } from "@react-navigation/stack";
+
+type RootStackParamList = {
+	Navigation: undefined;
+	Register: undefined;
+	// Add other screen names and their respective params here
+};
+
+type NavigationProp = StackNavigationProp<
+	RootStackParamList,
+	"Navigation",
+	"Register"
+>;
 
 export default function FirstSection() {
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
