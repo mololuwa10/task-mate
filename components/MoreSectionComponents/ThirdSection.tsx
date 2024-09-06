@@ -2,7 +2,17 @@ import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
+
+type RootStackParamList = {
+	ProfileScreen: undefined;
+	// Add other screen names and their respective params here
+};
+
+type NavigationProp = StackNavigationProp<RootStackParamList, "ProfileScreen">;
 export default function ThirdSection() {
+	const navigation = useNavigation<NavigationProp>();
 	return (
 		<>
 			{/* Third Section */}
@@ -16,7 +26,7 @@ export default function ThirdSection() {
 						marginStart: 10,
 					}}
 					onPress={() => {
-						console.log("Settings");
+						navigation.navigate("ProfileScreen");
 					}}
 				>
 					{/* Checklist icon */}

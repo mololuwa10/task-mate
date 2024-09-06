@@ -4,7 +4,7 @@ import React from "react";
 import HomeScreen from "../components/HomePageComponents/HomeScreen";
 import { TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import ProfileScreen from "@/components/ProfilePageComponents/ProfileScreen";
+import ProfileScreen from "@/app/ProfileScreen";
 import CreateTask from "./CreateTask";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -65,14 +65,14 @@ export default function Navigation() {
 					tabBarStyle: {
 						position: "absolute",
 						bottom: 0,
-						// left: 20,
-						// right: 20,
-						// backgroundColor: "#fff",
 						backgroundColor: "#3b3b3b",
-						// backgroundColor: "#222222",
-						// borderRadius: 15,
 						height: 75,
 						...styles.shadow,
+					},
+					tabBarLabelStyle: {
+						color: "#fff",
+						fontSize: 12,
+						marginTop: 5,
 					},
 				}}
 			>
@@ -87,6 +87,7 @@ export default function Navigation() {
 								color={focused ? "#fff" : "#948a5f"}
 							/>
 						),
+						tabBarLabel: "Home",
 						headerShown: false,
 					}}
 				/>
@@ -103,6 +104,7 @@ export default function Navigation() {
 						),
 
 						headerShown: false,
+						tabBarLabel: "Calendar",
 					}}
 				/>
 				<Tab.Screen
@@ -128,7 +130,6 @@ export default function Navigation() {
 						tabBarIcon: ({ focused }) => (
 							<Ionicons
 								name="chatbubble-outline"
-								// name="notifications-outline"
 								size={25}
 								color={focused ? "#fff" : "#948a5f"}
 							/>
@@ -137,22 +138,7 @@ export default function Navigation() {
 						headerShown: false,
 					}}
 				/>
-				{/* <Tab.Screen
-					name="Messages"
-					component={HomeScreen}
-					options={{
-						tabBarIcon: ({ focused }) => (
-							<Ionicons
-								// name="chatbubble-outline"
-								name="notifications-outline"
-								size={25}
-								color={focused ? "#fff" : "#948a5f"}
-							/>
-						),
-						tabBarBadge: 6,
-						headerShown: false,
-					}}
-				/> */}
+
 				<Tab.Screen
 					name="Profile"
 					component={MoreSection}
@@ -164,7 +150,6 @@ export default function Navigation() {
 								size={40}
 								color={focused ? "#fff" : "#948a5f"}
 							/>
-							// <Hamburger onToggle={(toggled) => {}} />
 						),
 						headerShown: false,
 					}}

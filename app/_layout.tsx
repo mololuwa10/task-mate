@@ -17,6 +17,7 @@ export default function RootLayout() {
 				<Stack.Screen name="Login" options={{ headerShown: false }} />
 				<Stack.Screen name="Register" options={{ headerShown: false }} />
 				<Stack.Screen name="Navigation" options={{ headerShown: false }} />
+				<Stack.Screen name="ProfileScreen" options={{ headerShown: false }} />
 				{/* <Stack.Screen name="CreateTask" options={{ headerShown: false }} /> */}
 				<Stack.Screen
 					name="CreateTask"
