@@ -1,7 +1,7 @@
 "use client";
 
 // import { useRouter } from "next/navigation";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useCallback } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -194,29 +194,66 @@ export const fetchUserDetails = async (): Promise<UserDetails | null> => {
 };
 
 export const useLogout = () => {
-	const navigation = useNavigation<AuthNavigationProp>();
-	const [userDetails, setUserDetails] = useState(null);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	// const navigation = useNavigation<AuthNavigationProp>(); // Valid hook call at the top
 
-	// sourcery skip: inline-immediately-returned-variable
-	const handleLogout = async () => {
+	const logout = async () => {
+		// Async function inside the hook
+		const token = await AsyncStorage.getItem("token");
+
+		if (!token) {
+			throw new Error("No token found");
+		}
+
 		try {
-			await AsyncStorage.removeItem("token");
+			const response = await fetch(`http://${ip}:5133/api/account/logout`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
 
-			// Confirm that the token is removed
-			const token = await AsyncStorage.getItem("token");
-			if (token === null) {
-				setIsLoggedIn(false);
-				setUserDetails(null);
-				navigation.navigate("Login");
-				Alert.alert("Success", "You have been logged out successfully.");
+			if (response.ok) {
+				// Handle successful logout
+				Alert.alert("Logout", "Logout successful!");
+				// navigation.navigate("Login"); // Navigate to Login screen
 			} else {
-				Alert.alert("Error", "Failed to log out. Please try again.");
+				// Handle failed logout
+				Alert.alert("Error", "Logout failed. Please try again.");
 			}
-		} catch (error) {
+		} catch (error: any) {
+			console.error("There was an error logging out: ", error.message);
 			Alert.alert("Error", "An error occurred during logout.");
-			console.error("Logout error: ", error);
 		}
 	};
-	return handleLogout;
+
+	return { logout }; // Return the logout function from the hook
 };
+
+// export const useLogout = () => {
+// 	const navigation = useNavigation<AuthNavigationProp>();
+// 	const [userDetails, setUserDetails] = useState(null);
+// 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+// 	// sourcery skip: inline-immediately-returned-variable
+// 	const handleLogout = async () => {
+// 		try {
+// 			await AsyncStorage.removeItem("token");
+
+// 			// Confirm that the token is removed
+// 			const token = await AsyncStorage.getItem("token");
+// 			if (token === null) {
+// 				setIsLoggedIn(false);
+// 				setUserDetails(null);
+// 				navigation.navigate("Login");
+// 				Alert.alert("Success", "You have been logged out successfully.");
+// 			} else {
+// 				Alert.alert("Error", "Failed to log out. Please try again.");
+// 			}
+// 		} catch (error) {
+// 			Alert.alert("Error", "An error occurred during logout.");
+// 			console.error("Logout error: ", error);
+// 		}
+// 	};
+// 	return handleLogout;
+// };

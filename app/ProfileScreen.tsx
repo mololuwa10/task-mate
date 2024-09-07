@@ -8,7 +8,7 @@ import {
 	Alert,
 	Switch,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { fetchUserDetails, UserDetails, useLogout } from "@/lib/auth";
@@ -17,7 +17,7 @@ function ProfileScreen() {
 	const navigation = useNavigation<StackNavigationProp<any>>();
 	const [isDarkMode, setIsDarkMode] = useState(false);
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-	const logOut = useLogout();
+	const { logout } = useLogout();
 
 	useEffect(() => {
 		const getUserDetails = async () => {
@@ -31,10 +31,20 @@ function ProfileScreen() {
 	}, []);
 
 	const handleLogout = () => {
-		// Implement your logout logic here
 		Alert.alert("Logout", "Are you sure you want to logout?", [
 			{ text: "Cancel", style: "cancel" },
-			{ text: "Logout", onPress: logOut },
+			{
+				text: "Logout",
+				onPress: async () => {
+					await logout();
+					navigation.dispatch(
+						CommonActions.reset({
+							index: 0,
+							routes: [{ name: "Login" }],
+						})
+					);
+				},
+			},
 		]);
 	};
 

@@ -1,8 +1,38 @@
-import { Text, View, ScrollView, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
+import { useLogout } from "@/lib/auth";
+import { useNavigation, CommonActions } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+
+// type RootStackParamList = {
+// 	Login: undefined;
+// };
+
+// type NavigationProp = StackNavigationProp<RootStackParamList, "Login">;
 
 export default function FourthSection() {
+	const { logout } = useLogout();
+	const navigation = useNavigation<StackNavigationProp<any>>(); // Handle navigation in the component
+
+	const handleLogout = () => {
+		Alert.alert("Logout", "Are you sure you want to logout?", [
+			{ text: "Cancel", style: "cancel" },
+			{
+				text: "Logout",
+				onPress: async () => {
+					await logout(); // Call the logout function and wait for it to finish
+					navigation.dispatch(
+						CommonActions.reset({
+							index: 0,
+							routes: [{ name: "Login" }], // Replace the entire stack with the Login screen
+						})
+					);
+				},
+			},
+		]);
+	};
+
 	return (
 		<>
 			{/* Third Section */}
@@ -125,9 +155,7 @@ export default function FourthSection() {
 						gap: 20,
 						marginStart: 10,
 					}}
-					onPress={() => {
-						console.log("Settings");
-					}}
+					onPress={handleLogout}
 				>
 					<Ionicons
 						name="exit-outline"
