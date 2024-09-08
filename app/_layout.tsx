@@ -33,6 +33,7 @@ export default function RootLayout() {
 						...TransitionPresets.SlideFromRightIOS,
 					}}
 				/>
+				<Stack.Screen name="UserTaskProfile" options={{ headerShown: false }} />
 			</Stack>
 			<Toast />
 		</>

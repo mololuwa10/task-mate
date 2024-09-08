@@ -3,6 +3,7 @@ import { fetchUserDetails, UserDetails } from "@/lib/auth";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
 
 type RootStackParamList = {
 	Navigation: undefined;
@@ -18,6 +19,7 @@ type NavigationProp = StackNavigationProp<
 
 export default function FirstSection() {
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+	const navigation = useNavigation<StackNavigationProp<any>>();
 
 	useEffect(() => {
 		const getUserDetails = async () => {
@@ -43,7 +45,7 @@ export default function FirstSection() {
 						marginStart: 10,
 					}}
 					onPress={() => {
-						console.log("Settings");
+						navigation.navigate("UserTaskProfile");
 					}}
 				>
 					<Text
