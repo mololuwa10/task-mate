@@ -34,6 +34,10 @@ export default function RootLayout() {
 					}}
 				/>
 				<Stack.Screen name="UserTaskProfile" options={{ headerShown: false }} />
+				<Stack.Screen
+					name="IndividualTaskPage"
+					options={{ headerShown: false }}
+				/>
 			</Stack>
 			<Toast />
 		</>

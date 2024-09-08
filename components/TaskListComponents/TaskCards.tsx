@@ -3,8 +3,13 @@ import { Text, View, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/FontAwesome";
 import moment from "moment";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
 export default function TaskCards({ tasks }: { tasks: any[] }) {
+	const navigation = useNavigation<StackNavigationProp<any>>();
+	const router = useRouter();
 	// Log the tasks received by TaskCards
 	// console.log("Tasks in TaskCards:", tasks);
 	// Function to get the priority color
@@ -44,6 +49,9 @@ export default function TaskCards({ tasks }: { tasks: any[] }) {
 						width: 350,
 						marginTop: 15,
 					}}
+					onPress={() =>
+						navigation.navigate("IndividualTaskPage", { taskId: task.taskId })
+					}
 				>
 					<View>
 						<View
