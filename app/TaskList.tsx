@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useCallback } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {
 	View,
@@ -11,27 +12,96 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import TaskStatusHeader from "@/components/TaskListComponents/TaskStatusHeader";
 import TaskCards from "@/components/TaskListComponents/TaskCards";
-type RootStackParamList = {
-	TaskList: undefined;
-	CreateTask: undefined;
-	// Add other screen names and their respective params here
-};
-
-type NavigationProp = StackNavigationProp<
-	RootStackParamList,
-	"TaskList",
-	"CreateTask"
->;
-
-const data = [
-	{ id: "1", label: "All", count: 105, isActive: true },
-	{ id: "2", label: "Complete", count: 65, isActive: false },
-	{ id: "3", label: "In Progress", count: 45, isActive: false },
-];
+import { getToDoItems } from "@/lib/dbModel";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function TaskList() {
-	const navigation = useNavigation<NavigationProp>();
+	const navigation = useNavigation<StackNavigationProp<any>>();
 	const { width } = Dimensions.get("window");
+
+	const [filter, setFilter] = useState("All");
+	const [tasks, setTasks] = useState<any[]>([]);
+	const [filteredTasks, setFilteredTasks] = useState<any[]>([]);
+	const [counts, setCounts] = useState({
+		all: 0,
+		complete: 0,
+		inProgress: 0,
+	});
+
+	// Fetch tasks when the screen is in focus
+	useFocusEffect(
+		useCallback(() => {
+			const fetchTasks = async () => {
+				try {
+					const response = await getToDoItems();
+					if (response && response.$values) {
+						const taskData = response.$values;
+
+						// Calculate the count for each filter
+						const allCount = taskData.length;
+						const completeCount = taskData.filter(
+							(task) => task.isCompleted
+						).length;
+						const inProgressCount = taskData.filter(
+							(task) => !task.isCompleted
+						).length;
+
+						// Set task counts
+						setCounts({
+							all: allCount,
+							complete: completeCount,
+							inProgress: inProgressCount,
+						});
+
+						setTasks(taskData);
+						setFilteredTasks(taskData);
+					}
+				} catch (error) {
+					console.error("Error fetching tasks:", error);
+				}
+			};
+			fetchTasks();
+		}, [])
+	);
+
+	// Update filtered tasks based on selected filter
+	useEffect(() => {
+		// console.log(`Applying filter: ${filter}`);
+		const filterTasks = () => {
+			let updatedTasks = [];
+			if (filter === "All") {
+				updatedTasks = tasks;
+			} else if (filter === "Complete") {
+				updatedTasks = tasks.filter((task) => task.isCompleted);
+			} else if (filter === "In Progress") {
+				updatedTasks = tasks.filter((task) => !task.isCompleted);
+			}
+			setFilteredTasks(updatedTasks);
+			console.log(`Filtered tasks count: ${updatedTasks.length}`);
+		};
+		filterTasks();
+	}, [filter, tasks]);
+
+	const data = [
+		{ id: "1", label: "All", count: counts.all, isActive: filter === "All" },
+		{
+			id: "2",
+			label: "Complete",
+			count: counts.complete,
+			isActive: filter === "Complete",
+		},
+		{
+			id: "3",
+			label: "In Progress",
+			count: counts.inProgress,
+			isActive: filter === "In Progress",
+		},
+	];
+
+	const handleFilterClick = (label: string) => {
+		console.log(`Filter clicked: ${label}`);
+		setFilter(label);
+	};
 
 	return (
 		<View style={{ flex: 1, backgroundColor: "#1c1c1c" }}>
@@ -48,12 +118,13 @@ export default function TaskList() {
 					Task List
 				</Text>
 			</View>
+
+			{/* Filter Selection */}
 			<View style={{ flexDirection: "row", padding: 20 }}>
 				<SideSwipe
 					data={data}
 					itemWidth={width * 0.85}
 					contentContainerStyle={{
-						// paddingTop: -20,
 						paddingBottom: 20,
 						paddingEnd: 10,
 					}}
@@ -65,14 +136,16 @@ export default function TaskList() {
 							label={item.label}
 							count={item.count}
 							isActive={item.isActive}
+							onPress={handleFilterClick}
 						/>
 					)}
 				/>
 			</View>
 
+			{/* Task Cards */}
 			<ScrollView style={{ flex: 1 }}>
 				<View style={{ paddingHorizontal: 20, paddingBottom: 100 }}>
-					<TaskCards />
+					<TaskCards tasks={filteredTasks} />
 				</View>
 			</ScrollView>
 

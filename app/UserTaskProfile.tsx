@@ -1,4 +1,5 @@
 import TaskCards from "@/components/TaskListComponents/TaskCards";
+import UserProfileTaskCards from "@/components/TaskListComponents/UserProfileTaskCards";
 import { UserDetails, fetchUserDetails } from "@/lib/auth";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
@@ -99,28 +100,7 @@ export default function UserTaskProfile() {
 
 				{/* Highlight Section */}
 				<View style={styles.highlightSection}>
-					<TaskCards />
-					{/* <View style={styles.highlightHeader}>
-					<Text style={styles.highlightName}>Michael S</Text>
-					<Text style={styles.timeText}>2h ago</Text>
-				</View>
-
-				<View style={styles.highlightContent}>
-					<Text style={styles.highlightText}>
-						My brethren, have not the faith of our Lord Jesus Christ, the Lord
-						of glory, with respect of persons...
-					</Text>
-					<Text style={styles.bibleVerse}>James 2:1 KJV</Text>
-				</View> */}
-
-					{/* <View style={styles.highlightFooter}>
-					<TouchableOpacity>
-						<Icon name="heart" size={20} color="#888" />
-					</TouchableOpacity>
-					<TouchableOpacity>
-						<Icon name="comment" size={20} color="#888" />
-					</TouchableOpacity>
-				</View> */}
+					<UserProfileTaskCards />
 				</View>
 			</ScrollView>
 		</View>

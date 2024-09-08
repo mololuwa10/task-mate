@@ -66,7 +66,6 @@ const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
 // GET ALL TASKS
 export const getToDoItems = async () => {
 	const token = await AsyncStorage.getItem("token");
-	// const ip = getLocalHost;
 
 	if (!token) {
 		throw new Error("No token found");

@@ -45,7 +45,7 @@ export default function OngoingSection() {
 			case "Low":
 				return "green";
 			default:
-				return "gray"; // Default color if priority is undefined
+				return "gray";
 		}
 	};
 	useFocusEffect(

@@ -10,12 +10,14 @@ type TaskStatusHeaderProps = {
 	label: string;
 	count: number;
 	isActive: boolean;
+	onPress: (label: string) => void;
 };
 
 export default function TaskStatusHeader({
 	label,
 	count,
 	isActive,
+	onPress,
 }: TaskStatusHeaderProps) {
 	return (
 		<>
@@ -27,6 +29,10 @@ export default function TaskStatusHeader({
 						// borderColor: isActive ? "#000" : "#ccc",
 					},
 				]}
+				activeOpacity={0.7}
+				accessibilityLabel={`Filter by ${label}, ${count} tasks available`}
+				accessible={true}
+				onPress={() => onPress(label)}
 			>
 				<Text style={[styles.label, { color: isActive ? "#fff" : "#000" }]}>
 					{label}
