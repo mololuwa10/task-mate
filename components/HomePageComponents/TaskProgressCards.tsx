@@ -8,7 +8,8 @@ import {
 import CircularProgress from "react-native-circular-progress-indicator";
 import moment from "moment";
 import { getToDoItems } from "@/lib/dbModel";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function TaskProgressCards() {
 	const { width } = Dimensions.get("window");
@@ -23,12 +24,14 @@ export default function TaskProgressCards() {
 		try {
 			const response = await getToDoItems();
 			if (response && response.$values) {
-				const today = moment().format("YYYY-MM-DD");
+				const today = moment().startOf("day");
+				console.log("Today date:", today.format());
 
 				// Filter tasks for the current day
-				const todayTasks = response.$values.filter((task) =>
-					moment(task.dueDate).isSame(today, "day")
-				);
+				const todayTasks = response.$values.filter((task) => {
+					const taskDate = moment(task.dateCreated).startOf("day");
+					return taskDate.isSame(today, "day");
+				});
 
 				const totalTasks = todayTasks.length;
 				const completedTasks = todayTasks.filter(
@@ -46,10 +49,22 @@ export default function TaskProgressCards() {
 		}
 	};
 
+	useFocusEffect(
+		useCallback(() => {
+			let isMounted = true;
+			fetchTodayTasks();
+
+			// Cleanup function when screen is unfocused
+			return () => {
+				isMounted = false;
+			};
+		}, [])
+	);
+
 	// Fetch tasks on initial load
-	useEffect(() => {
-		fetchTodayTasks();
-	}, []);
+	// useEffect(() => {
+	// 	fetchTodayTasks();
+	// }, []);
 
 	// Calculate progress percentage
 	const progressPercentage =

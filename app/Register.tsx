@@ -25,6 +25,7 @@ export default function Register() {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [passwordVisible, setPasswordVisible] = useState(false);
+	const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [errors, setErrors] = useState({
 		firstname: "",
@@ -37,6 +38,10 @@ export default function Register() {
 
 	const togglePasswordVisibility = () => {
 		setPasswordVisible(!passwordVisible);
+	};
+
+	const toggleConfirmPasswordVisibility = () => {
+		setConfirmPasswordVisible(!confirmPasswordVisible);
 	};
 
 	const validate = () => {
@@ -97,7 +102,7 @@ export default function Register() {
 				await registerUser(userData);
 				Toast.show({
 					type: "success",
-					text1: "Login Successful",
+					text1: "Registration Successful",
 					text2: "Welcome To Task Mate!",
 				});
 				setIsLoading(false);
@@ -276,10 +281,10 @@ export default function Register() {
 							setConfirmPassword(text);
 							setErrors((prev) => ({ ...prev, confirmPassword: "" }));
 						}}
-						secureTextEntry={!passwordVisible}
+						secureTextEntry={!confirmPasswordVisible}
 					/>
 					<TouchableOpacity
-						onPress={togglePasswordVisibility}
+						onPress={toggleConfirmPasswordVisibility}
 						style={{
 							position: "absolute",
 							right: 15,
@@ -289,7 +294,7 @@ export default function Register() {
 						}}
 					>
 						<Icon
-							name={passwordVisible ? "eye" : "eye-slash"}
+							name={confirmPasswordVisible ? "eye" : "eye-slash"}
 							size={22}
 							color="white"
 						/>

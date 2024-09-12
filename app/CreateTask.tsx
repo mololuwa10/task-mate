@@ -36,18 +36,21 @@ export default function CreateTask() {
 	const navigation = useNavigation<CreateTaskNavigationProp>();
 	const [taskName, setTaskName] = useState("");
 	const [taskDescription, setTaskDescription] = useState("");
-	const [startDate, setStartDate] = useState("");
+	const [dateCreated, setDateCreated] = useState(new Date());
 	const [dueDate, setDueDate] = useState(new Date());
+	const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+	const [showDueDatePicker, setShowDueDatePicker] = useState(false);
 	const [categories, setCategories] = useState<
 		{ label: string; value: string }[]
 	>([]);
 	const [selectedCategory, setSelectedCategory] = useState("");
 	const [selectedPriority, setSelectedPriority] = useState("");
 	const [subTasks, setSubTasks] = useState<SubTask[]>([]);
-	const [date, setDate] = useState(new Date());
-	const [show, setShow] = useState(false);
 	const [images, setImages] = useState<string[]>([]);
 	const [subTaskDates, setSubTaskDates] = useState<Date[]>([]);
+	const [showSubTaskDatePickers, setShowSubTaskDatePickers] = useState<
+		boolean[]
+	>([]);
 
 	const selectImage = async () => {
 		// Request permission if not already granted
@@ -78,11 +81,46 @@ export default function CreateTask() {
 		}
 	};
 
-	const onChange = (event: any, selectedDate: any) => {
-		setShow(Platform.OS === "ios");
-		if (selectedDate) {
-			setDate(selectedDate);
-			setDueDate(selectedDate);
+	const handleDateChange = (
+		event: any,
+		selectedDate: Date | undefined,
+		type: string
+	) => {
+		// Get the current date (without time for comparison)
+		const now = new Date();
+		now.setHours(0, 0, 0, 0);
+
+		if (type === "startDate") {
+			setShowStartDatePicker(Platform.OS === "ios");
+
+			if (selectedDate) {
+				// Ensure the created date is today or in the future
+				if (selectedDate >= now && selectedDate <= dueDate) {
+					setDateCreated(selectedDate);
+				} else {
+					Toast.show({
+						type: "error",
+						text1: "Invalid Date Created",
+						text2:
+							"The date cannot be in the past or later than the main task due date.",
+					});
+				}
+			}
+		} else if (type === "dueDate") {
+			setShowDueDatePicker(Platform.OS === "ios");
+
+			if (selectedDate) {
+				// Ensure the due date is after the date created
+				if (selectedDate >= dateCreated) {
+					setDueDate(selectedDate);
+				} else {
+					Toast.show({
+						type: "error",
+						text1: "Invalid Due Date",
+						text2: "The due date cannot be earlier than the created date.",
+					});
+				}
+			}
 		}
 	};
 
@@ -91,6 +129,36 @@ export default function CreateTask() {
 			...subTasks,
 			{ subTaskName: "", SubtaskDescription: "", SubtaskDueDate: "" },
 		]);
+	};
+
+	// Function to handle subtask due date change
+	const onSubTaskDateChange = (
+		event: any,
+		selectedDate: Date | undefined,
+		index: number
+	) => {
+		const updatedShowPickers = [...showSubTaskDatePickers];
+		updatedShowPickers[index] = Platform.OS === "ios";
+		setShowSubTaskDatePickers(updatedShowPickers);
+
+		if (selectedDate && selectedDate < dueDate) {
+			updateSubTaskDate(index, selectedDate);
+			updateSubTask(index, "SubtaskDueDate", selectedDate.toISOString());
+		} else {
+			Toast.show({
+				type: "error",
+				text1: "Invalid Subtask Due Date",
+				text2:
+					"The subtask due date cannot be later than the main task due date.",
+			});
+		}
+	};
+
+	// Function to toggle visibility of the DatePicker for a specific subtask
+	const toggleSubTaskDatePicker = (index: number) => {
+		const updatedShowPickers = [...showSubTaskDatePickers];
+		updatedShowPickers[index] = !updatedShowPickers[index];
+		setShowSubTaskDatePickers(updatedShowPickers);
 	};
 
 	const updateSubTask = (
@@ -109,22 +177,10 @@ export default function CreateTask() {
 		setSubTaskDates(updatedDates);
 	};
 
+	// Initialize the showDatePickers state when subtasks are added or modified
 	useEffect(() => {
-		setSubTaskDates(subTasks.map(() => new Date()));
+		setShowSubTaskDatePickers(subTasks.map(() => false));
 	}, [subTasks]);
-
-	// Function to handle subtask due date change
-	const onSubTaskDateChange = (
-		event: any,
-		selectedDate: Date | undefined,
-		index: number
-	) => {
-		setShow(Platform.OS === "ios");
-		if (selectedDate) {
-			updateSubTaskDate(index, selectedDate);
-			updateSubTask(index, "SubtaskDueDate", selectedDate.toISOString());
-		}
-	};
 
 	// Function to remove a subtask
 	const removeSubtask = (index: number) => {
@@ -157,13 +213,15 @@ export default function CreateTask() {
 
 	const handleCreateTask = async () => {
 		// Create a new Date object with specific time
+		const createdDateWithTime = new Date(dateCreated);
+		createdDateWithTime.setUTCHours(23, 59, 59, 0);
+
 		const dueDateWithTime = new Date(dueDate);
-		dueDateWithTime.setUTCHours(23, 59, 59, 0); // Set time to 23:59:59 UTC
+		dueDateWithTime.setUTCHours(23, 59, 59, 0);
 
 		// Format the due date to ISO 8601 string
 		const formattedDueDate = dueDateWithTime.toISOString();
 
-		const dateCreated = new Date();
 		const formattedDateCreated = dateCreated.toISOString();
 		console.log(formattedDateCreated);
 
@@ -273,6 +331,42 @@ export default function CreateTask() {
 							onChangeText={setTaskDescription}
 						/>
 
+						<Text style={styles.label}>Start Date</Text>
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								backgroundColor: "#2c2c2c",
+								borderRadius: 10,
+								marginBottom: 20,
+								paddingHorizontal: 15,
+							}}
+							onPress={() => setShowStartDatePicker(true)}
+						>
+							<Icon name="calendar" size={20} color="white" />
+
+							<TextInput
+								style={styles.input}
+								placeholderTextColor="#777"
+								value={
+									dateCreated ? dateCreated.toDateString() : "Select Start Date"
+								}
+								// onChangeText={setDateCreated}
+								editable={false}
+							/>
+						</TouchableOpacity>
+
+						{showStartDatePicker && (
+							<DateTimePicker
+								value={dateCreated || new Date()}
+								mode="date"
+								display="default"
+								onChange={(event, selectedDate) =>
+									handleDateChange(event, selectedDate, "startDate")
+								}
+							/>
+						)}
+
 						<Text style={styles.label}>Due Date</Text>
 						<TouchableOpacity
 							style={{
@@ -283,7 +377,7 @@ export default function CreateTask() {
 								marginBottom: 20,
 								paddingHorizontal: 15,
 							}}
-							onPress={() => setShow(true)}
+							onPress={() => setShowDueDatePicker(true)}
 						>
 							<Icon name="calendar" size={20} color="white" />
 
@@ -292,17 +386,18 @@ export default function CreateTask() {
 								// placeholder="August 25, 2023"
 								placeholderTextColor="#777"
 								value={dueDate ? dueDate.toDateString() : "Select Due Date"}
-								onChangeText={setDueDate}
 								editable={false} // Assuming you'll implement a date picker here
 							/>
 						</TouchableOpacity>
 
-						{show && (
+						{showDueDatePicker && (
 							<DateTimePicker
-								value={date}
+								value={dueDate || new Date()}
 								mode="date"
 								display="default"
-								onChange={onChange}
+								onChange={(event, selectedDate) =>
+									handleDateChange(event, selectedDate, "dueDate")
+								}
 							/>
 						)}
 
@@ -386,13 +481,14 @@ export default function CreateTask() {
 										backgroundColor: "#2c2c2c",
 										borderRadius: 10,
 										marginBottom: 20,
+										width: "100%",
 										paddingHorizontal: 15,
 									}}
-									onPress={() => setShow(true)}
+									onPress={() => toggleSubTaskDatePicker(index)}
 								>
+									<Icon name="calendar" size={20} color="white" />
 									<TextInput
 										style={styles.input}
-										// placeholder="August 12, 2023"
 										placeholder={`Due Date ${index + 1}`}
 										placeholderTextColor="#777"
 										value={
@@ -400,15 +496,11 @@ export default function CreateTask() {
 												? subTaskDates[index].toDateString()
 												: "Select Date"
 										}
-										onChangeText={(text) =>
-											updateSubTask(index, "SubtaskDueDate", text)
-										}
 										editable={false}
 									/>
-									<Icon name="calendar" size={20} color="white" />
 								</TouchableOpacity>
 
-								{show && (
+								{showSubTaskDatePickers[index] && (
 									<DateTimePicker
 										value={subTaskDates[index] || new Date()}
 										mode="date"
