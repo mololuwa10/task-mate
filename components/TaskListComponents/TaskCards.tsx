@@ -10,9 +10,6 @@ import { useRouter } from "expo-router";
 export default function TaskCards({ tasks }: { tasks: any[] }) {
 	const navigation = useNavigation<StackNavigationProp<any>>();
 	const router = useRouter();
-	// Log the tasks received by TaskCards
-	// console.log("Tasks in TaskCards:", tasks);
-	// Function to get the priority color
 	const getPriorityColor = (priority: string) => {
 		switch (priority) {
 			case "High":

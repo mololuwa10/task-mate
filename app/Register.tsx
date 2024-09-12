@@ -7,12 +7,14 @@ import {
 	View,
 	Alert,
 	TextInput,
+	ActivityIndicator,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
 import { registerUser } from "@/lib/auth";
+import Toast from "react-native-toast-message";
 
 export default function Register() {
 	const navigation = useNavigation<StackNavigationProp<any>>();
@@ -22,9 +24,8 @@ export default function Register() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-	const [keyboardVisible, setKeyboardVisible] = useState(false);
 	const [passwordVisible, setPasswordVisible] = useState(false);
-
+	const [isLoading, setIsLoading] = useState(false);
 	const [errors, setErrors] = useState({
 		firstname: "",
 		lastname: "",
@@ -93,10 +94,21 @@ export default function Register() {
 					password,
 					confirmPassword,
 				};
-				const response = await registerUser(userData);
-				Alert.alert("Success", "User registered successfully");
+				await registerUser(userData);
+				Toast.show({
+					type: "success",
+					text1: "Login Successful",
+					text2: "Welcome To Task Mate!",
+				});
+				setIsLoading(false);
+				navigation.navigate("Navigation");
 			} catch (error) {
-				Alert.alert("Registration Error", (error as Error).message);
+				Toast.show({
+					type: "error",
+					text1: "Registration Failed",
+					text2: "Please check your credentials and try again.",
+				});
+				console.log("Registration Error", (error as Error).message);
 			}
 		} else {
 			Alert.alert("Validation Error", "Please correct the errors in the form.");
@@ -119,7 +131,6 @@ export default function Register() {
 					alignItems: "center",
 					padding: 20,
 					paddingTop: Platform.OS === "ios" ? 50 : 50,
-					backgroundColor: "#001D24",
 				}}
 			>
 				<TouchableOpacity onPress={() => navigation.goBack()}>
@@ -231,11 +242,24 @@ export default function Register() {
 							setPassword(text);
 							setErrors((prev) => ({ ...prev, password: "" }));
 						}}
-						secureTextEntry
+						secureTextEntry={!passwordVisible}
 					/>
-					{/* {errors.password ? (
-						<Text style={styles.errorText}>{errors.password}</Text>
-					) : null} */}
+					<TouchableOpacity
+						onPress={togglePasswordVisibility}
+						style={{
+							position: "absolute",
+							right: 15,
+							top: 20,
+							height: 25,
+							width: 25,
+						}}
+					>
+						<Icon
+							name={passwordVisible ? "eye" : "eye-slash"}
+							size={22}
+							color="white"
+						/>
+					</TouchableOpacity>
 					<Text style={styles.hintText}>
 						At least 8 characters, 1 uppercase letter, 1 number, and 1 special
 						character
@@ -252,8 +276,24 @@ export default function Register() {
 							setConfirmPassword(text);
 							setErrors((prev) => ({ ...prev, confirmPassword: "" }));
 						}}
-						secureTextEntry
+						secureTextEntry={!passwordVisible}
 					/>
+					<TouchableOpacity
+						onPress={togglePasswordVisibility}
+						style={{
+							position: "absolute",
+							right: 15,
+							top: 20,
+							height: 25,
+							width: 25,
+						}}
+					>
+						<Icon
+							name={passwordVisible ? "eye" : "eye-slash"}
+							size={22}
+							color="white"
+						/>
+					</TouchableOpacity>
 					{errors.confirmPassword ? (
 						<Text style={styles.errorText}>{errors.confirmPassword}</Text>
 					) : null}
@@ -269,9 +309,48 @@ export default function Register() {
 						alignItems: "center",
 						marginTop: 20,
 					}}
+					disabled={isLoading}
 				>
-					<Text style={{ color: "#1c1c1c", fontSize: 18 }}>Register</Text>
+					{isLoading ? (
+						<ActivityIndicator size="small" color="#ffffff" />
+					) : (
+						<Text style={{ color: "#1c1c1c", fontSize: 18 }}>Register</Text>
+					)}
 				</TouchableOpacity>
+
+				<View
+					style={{
+						flex: 1,
+						justifyContent: "center",
+						alignItems: "center",
+						marginTop: 20,
+					}}
+				>
+					<View style={{ flexDirection: "row", alignItems: "center" }}>
+						<Text
+							style={{
+								color: "white",
+								fontSize: 18,
+								marginRight: 10,
+								textAlign: "center",
+							}}
+						>
+							Already have an account?
+							<TouchableOpacity onPress={() => navigation.navigate("Login")}>
+								<Text
+									style={{
+										fontSize: 18,
+										textDecorationLine: "underline",
+										color: "#007BFF",
+										marginLeft: 5,
+									}}
+								>
+									Login
+								</Text>
+							</TouchableOpacity>
+						</Text>
+					</View>
+				</View>
 			</ScrollView>
 		</KeyboardAvoidingView>
 	);

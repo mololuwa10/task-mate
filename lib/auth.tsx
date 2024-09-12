@@ -75,8 +75,6 @@ const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
 
 export const registerUser = async (userData: any) => {
 	try {
-		// const ip = getLocalHost;
-
 		const response = await fetch(`http://${ip}:5133/api/account/register`, {
 			method: "POST",
 			headers: {

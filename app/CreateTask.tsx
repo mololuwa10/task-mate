@@ -163,10 +163,15 @@ export default function CreateTask() {
 		// Format the due date to ISO 8601 string
 		const formattedDueDate = dueDateWithTime.toISOString();
 
+		const dateCreated = new Date();
+		const formattedDateCreated = dateCreated.toISOString();
+		console.log(formattedDateCreated);
+
 		// Prepare the ToDo item data
 		const toDoItem = {
 			TaskName: taskName,
 			TaskDescription: taskDescription,
+			DateCreated: formattedDateCreated,
 			DueDate: formattedDueDate, // Correctly formatted due date
 			Priority: selectedPriority,
 			CategoryId: selectedCategory ? parseInt(selectedCategory) : undefined,

@@ -73,14 +73,11 @@ export default function Login() {
 		// navigation.navigate("Navigation");
 		try {
 			await login(email, password);
-			// setConfirmationMessage("Login successful!");
-			// setConfirmationMessage("");
 			Toast.show({
 				type: "success",
 				text1: "Login Successful",
 				text2: "Welcome back!",
 			});
-			// Alert.alert("Login Successful");
 			setErrorMessage("");
 			setIsLoading(false);
 			navigation.navigate("Navigation");
@@ -116,7 +113,6 @@ export default function Login() {
 						justifyContent: "center",
 						alignItems: "center",
 						padding: 20,
-						// backgroundColor: "#001D24",
 						backgroundColor: "#1c1c1c",
 					}}
 				>
@@ -222,18 +218,6 @@ export default function Login() {
 								</Text>
 							</TouchableOpacity>
 						)}
-
-						{/* {errorMessage ? (
-							<Text style={{ color: "red", marginTop: 10 }}>
-								{errorMessage}
-							</Text>
-						) : null}
-
-						{confirmationMessage ? (
-							<Text style={{ color: "green", marginTop: 10 }}>
-								{confirmationMessage}
-							</Text>
-						) : null} */}
 					</View>
 
 					<View
@@ -268,7 +252,6 @@ export default function Login() {
 					<TouchableOpacity
 						onPress={handleLogin}
 						style={{
-							// backgroundColor: "#66A0AF",
 							backgroundColor: "#f2e29b",
 							padding: 15,
 							borderRadius: 10,

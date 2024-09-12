@@ -11,10 +11,10 @@ interface SubTask {
 	subTaskId: number;
 	subTaskName: string;
 	subtaskDescription: string;
-	subtaskDueDate: string; // Use Date if you prefer working with Date objects
+	subtaskDueDate: string;
 	subtaskIsCompleted: boolean;
 	taskId: number;
-	task?: any; // Adjust if the task property might be used in some cases
+	task?: any;
 }
 
 interface Attachment {
