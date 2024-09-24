@@ -21,7 +21,7 @@ type NavigationProp = StackNavigationProp<
 >;
 
 export default function OngoingSection() {
-	const navigation = useNavigation<NavigationProp>();
+	const navigation = useNavigation<StackNavigationProp<any>>();
 
 	const { width } = Dimensions.get("window");
 	const [cards, setCards] = useState<
@@ -158,6 +158,11 @@ export default function OngoingSection() {
 									width: 300,
 								}}
 								key={item.id}
+								onPress={() =>
+									navigation.navigate("IndividualTaskPage", {
+										taskId: item.id,
+									})
+								}
 							>
 								<View>
 									<Text

@@ -1,7 +1,16 @@
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+	Image,
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
+	Linking,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Constants from "expo-constants";
+import * as WebBrowser from "expo-web-browser";
 
 type RootStackParamList = {
 	Login: undefined;
@@ -13,6 +22,41 @@ type SignInOptionsNavigationProp = StackNavigationProp<
 	"Login",
 	"Register"
 >;
+
+const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
+
+// const handleGoogleSignIn = () => {
+// 	const apiUrl = `http://${ip}:5133/api/account/google-login`;
+// 	Linking.openURL(apiUrl);
+// };
+
+const handleGoogleSignIn = async () => {
+	// const authUrl = `https://bdee-82-15-14-47.ngrok-free.app/api/account/google-login`;
+
+	const authUrl = `https://bdee-82-15-14-47.ngrok-free.app/api/account/google-login`;
+
+	const result = await WebBrowser.openAuthSessionAsync(
+		authUrl,
+		"https://bdee-82-15-14-47.ngrok-free.app/api/account/google-login"
+	);
+
+	if (result.type === "success" && result.url) {
+		// Parse URL to extract any tokens or information
+		const queryParams = new URL(result.url).searchParams;
+		const status = queryParams.get("status");
+		const email = queryParams.get("email");
+
+		if (status === "success") {
+			// Successfully logged in, proceed with handling the user's data
+			console.log("Login success, user email:", email);
+			// Add further handling like saving the token, navigating, etc.
+		} else {
+			console.log("Login failed");
+		}
+	} else {
+		console.log("Login canceled");
+	}
+};
 
 export default function SignInOptions() {
 	const navigation = useNavigation<SignInOptionsNavigationProp>();
@@ -104,6 +148,7 @@ export default function SignInOptions() {
 							flexDirection: "row",
 							justifyContent: "center",
 						}}
+						onPress={handleGoogleSignIn}
 					>
 						<Icon
 							name="google"

@@ -55,6 +55,7 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.10",
+    "react-native-webview": "^13.12.2",
     "task-mate-backup": "file:"
   },
   "devDependencies": {
