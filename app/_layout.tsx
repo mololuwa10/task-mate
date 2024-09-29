@@ -27,6 +27,13 @@ export default function RootLayout() {
 					}}
 				/>
 				<Stack.Screen
+					name="EditTask"
+					options={{
+						headerShown: false,
+						...TransitionPresets.SlideFromRightIOS,
+					}}
+				/>
+				<Stack.Screen
 					name="TaskList"
 					options={{
 						headerShown: false,

@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Constants from "expo-constants";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 type RootStackParamList = {
 	TaskList: undefined;
@@ -68,7 +69,7 @@ const SubTask = ({
 export default function IndividualTaskPage() {
 	const route = useRoute();
 	const { taskId } = (route.params as IndividualTaskPageRouteProp) || {};
-	const navigation = useNavigation();
+	const navigation = useNavigation<StackNavigationProp<any>>();
 	const [task, setTask] = useState<any>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -157,23 +158,25 @@ export default function IndividualTaskPage() {
 						Task Details
 					</Text>
 					<View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
-						<Ionicons
-							name="share-social-outline"
-							size={25}
-							color={"#FFFFFF"}
-							style={{
-								color: "#fff",
-								textAlign: "center",
-								width: 50,
-							}}
-						/>
+						<TouchableOpacity>
+							<Ionicons
+								name="share-social-outline"
+								size={25}
+								color={"#FFFFFF"}
+								style={{
+									color: "#fff",
+									textAlign: "center",
+									width: 50,
+								}}
+							/>
+						</TouchableOpacity>
 
 						<Ionicons
 							name="pencil-outline"
 							size={25}
 							color="#FFFFFF"
 							onPress={() => {
-								console.log("hello");
+								navigation.navigate("EditTask", { taskId: taskId });
 							}}
 						/>
 					</View>
@@ -205,11 +208,11 @@ export default function IndividualTaskPage() {
 						style={{
 							flexDirection: "row",
 							marginTop: 20,
-							gap: 80,
+							gap: 100,
 						}}
 					>
 						<Text style={{ color: "white", fontSize: 14, fontWeight: "300" }}>
-							Created Date:
+							Start Date:
 						</Text>
 						<Text style={{ color: "white", fontSize: 14, fontWeight: "600" }}>
 							{moment(task.dateCreated).format("MMMM D, YYYY")}
@@ -349,16 +352,30 @@ export default function IndividualTaskPage() {
 				</View>
 
 				{/* Subtasks */}
-				<Text
+				<View
 					style={{
-						fontSize: 18,
-						fontWeight: "bold",
-						marginVertical: 10,
-						color: "white",
+						marginTop: 30,
+						marginBottom: 20,
+						flexDirection: "row",
+						justifyContent: "space-between",
 					}}
 				>
-					Subtasks
-				</Text>
+					<Text
+						style={{
+							fontSize: 18,
+							fontWeight: "bold",
+							color: "white",
+							marginTop: -4,
+						}}
+					>
+						Subtasks
+					</Text>
+
+					<TouchableOpacity>
+						<Text style={{ color: "#f2e29b" }}>Edit/Add Subtask</Text>
+					</TouchableOpacity>
+				</View>
+
 				{subtasks.map((subtask: any, index: any) => (
 					<SubTask
 						key={index}
