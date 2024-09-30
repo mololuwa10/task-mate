@@ -5,13 +5,13 @@ Add Tasks: Implement the basic ability to add tasks. (DONE)
 Edit Tasks: Allow modification of existing tasks. (DONE)
 Delete Tasks: Enable task removal. (DONE)
 Mark as Complete: Implement functionality to mark tasks as completed. (DONE)
-Task Details: Provide a view for detailed task information. (DONE ON THE BACKEND)
+Task Details: Provide a view for detailed task information. (DONE ON THE BACKEND AND FRONTEND)
 
 2. Task Organization (Week 3)
 
 Categorization: Develop functionality to organize tasks into categories or projects.
-Due Dates: Implement due dates for tasks.
-Priority Levels: Set up priority levels for tasks.
+Due Dates: Implement due dates for tasks. (DONE)
+Priority Levels: Set up priority levels for tasks. (DONE)
 
 3. User Authentication (Week 4)
 

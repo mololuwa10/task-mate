@@ -45,6 +45,12 @@ export default function RootLayout() {
 					name="IndividualTaskPage"
 					options={{ headerShown: false }}
 				/>
+				<Stack.Screen
+					name="EditSubTask"
+					options={{
+						headerShown: false,
+					}}
+				/>
 			</Stack>
 			<Toast />
 		</>

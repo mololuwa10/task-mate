@@ -372,7 +372,14 @@ export default function IndividualTaskPage() {
 					</Text>
 
 					<TouchableOpacity>
-						<Text style={{ color: "#f2e29b" }}>Edit/Add Subtask</Text>
+						<Text
+							style={{ color: "#f2e29b" }}
+							onPress={() =>
+								navigation.navigate("EditSubTask", { taskId: taskId })
+							}
+						>
+							Edit/Add Subtask
+						</Text>
 					</TouchableOpacity>
 				</View>
 
