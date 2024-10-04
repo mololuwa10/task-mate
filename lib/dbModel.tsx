@@ -97,7 +97,6 @@ export const getToDoItems = async () => {
 // GET ALL TASKS BY ID
 export const getToDoItemById = async (id: number) => {
 	const token = await AsyncStorage.getItem("token");
-	// const ip = getLocalHost;
 	if (!token) {
 		throw new Error("No token found");
 	}

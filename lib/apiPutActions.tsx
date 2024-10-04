@@ -10,6 +10,7 @@ export interface SubTask {
 	subTaskName: string;
 	subtaskDescription: string;
 	subtaskDueDate: string;
+	subtaskIsCompleted: boolean;
 }
 
 export interface Recurrence {
@@ -29,45 +30,38 @@ export interface CreateToDoItemsDTO {
 
 const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
 
-export const postToDoItem = async (
-	toDoItem: CreateToDoItemsDTO,
-	attachments: File[]
-) => {
+// Update SubTask
+export const updateSubTask = async (subTask: SubTask, subTaskId: number) => {
 	const token = await AsyncStorage.getItem("token");
 
 	if (!token) {
 		throw new Error("No token found");
 	}
 
-	const formData = new FormData();
-
-	formData.append("ToDoItem", JSON.stringify(toDoItem));
-
-	// Adding attachments
-	attachments.forEach((attachment) => {
-		formData.append("attachments", attachment);
-	});
-
 	try {
-		const response = await fetch(`http://${ip}:5133/api/todoitems`, {
-			method: "POST",
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			body: formData,
-		});
+		const response = await fetch(
+			`http://${ip}:5133/api/subtasks/${subTaskId}`,
+			{
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(subTask),
+			}
+		);
 
 		if (response.ok) {
 			const data = await response.json();
-			console.log("Task Created Successfully: ", data);
+			console.log("SubTask Updated Successfully: ", data);
 			return data;
 		} else {
 			const errorText = await response.text();
-			console.error("Error creating task: ", errorText);
+			console.error("Error updating subtask: ", errorText);
 			return null;
 		}
 	} catch (error: any) {
-		console.error("Error creating task: ", error.message);
+		console.error("Error updating subtask: ", error.message);
 		return null;
 	}
 };

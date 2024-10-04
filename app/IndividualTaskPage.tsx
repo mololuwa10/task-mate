@@ -3,7 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	View,
 	Text,
@@ -138,8 +138,7 @@ export default function IndividualTaskPage() {
 
 	return (
 		<>
-			<View style={{ flexGrow: 1, backgroundColor: "#1c1c1c" }}>
-				{/* Profile Header */}
+			<View style={{ flex: 1, backgroundColor: "#1c1c1c" }}>
 				<View
 					style={{
 						flexDirection: "row",
@@ -182,12 +181,12 @@ export default function IndividualTaskPage() {
 					</View>
 				</View>
 
-				{/* Task details */}
 				<View
 					style={{
 						paddingStart: 20,
 						paddingHorizontal: 20,
-						marginBottom: -150,
+						paddingBottom: 30,
+						// marginTop: -150,
 					}}
 				>
 					<Text
@@ -249,151 +248,150 @@ export default function IndividualTaskPage() {
 						</Text>
 					</View>
 				</View>
-			</View>
 
-			<ScrollView
-				contentContainerStyle={{
-					flexGrow: 1,
-					paddingHorizontal: 20,
-					// paddingBottom: 200,
-					backgroundColor: "#303030",
-				}}
-			>
-				<View style={{ marginTop: 20 }}>
-					<Text
-						style={{
-							color: "white",
-							fontSize: 14,
-							fontWeight: "300",
-							marginBottom: 10,
-						}}
-					>
-						Task Description
-					</Text>
-					<Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
-						{expanded ? task.taskDescription : shortDescription}
-					</Text>
-					{isDescriptionLong && (
-						<TouchableOpacity
-							onPress={() => setExpanded(!expanded)}
-							style={{ marginTop: 10 }}
-						>
-							<Text style={{ color: "#1e90ff", fontSize: 16 }}>
-								{expanded ? "See Less" : "See More"}
-							</Text>
-						</TouchableOpacity>
-					)}
-				</View>
-
-				{/* Attachments Section */}
-				<View style={{ marginTop: 30 }}>
-					<Text
-						style={{
-							color: "white",
-							fontSize: 16,
-							fontWeight: "bold",
-							marginBottom: 20,
-						}}
-					>
-						Attachments
-					</Text>
-					<View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-						<TouchableOpacity
-							style={{
-								width: 50,
-								height: 50,
-								backgroundColor: "#303030",
-								borderRadius: 10,
-								borderWidth: 1,
-								borderColor: "#FFFFFF",
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-						>
-							<Ionicons name="add-outline" size={30} color="white" />
-						</TouchableOpacity>
-
-						{attachments.length > 0 ? (
-							attachments.map(
-								(attachment: any, index: number) => (
-									console.log(`${baseUrl}${attachment.attachmentPath}`),
-									(
-										<View
-											key={index}
-											style={{
-												width: 50,
-												height: 50,
-												marginRight: 10,
-												marginBottom: 10,
-												borderRadius: 10,
-												borderWidth: 1,
-												borderColor: "#FFFFFF",
-												overflow: "hidden",
-											}}
-										>
-											<Image
-												source={{
-													uri: `${baseUrl}${attachment.attachmentPath}`,
-												}}
-												// style={{ width: "100%", height: "100%" }}
-											/>
-										</View>
-									)
-								)
-							)
-						) : (
-							<Text
-								style={{ color: "white", fontSize: 14, fontStyle: "italic" }}
-							>
-								No attachments
-							</Text>
-						)}
-					</View>
-				</View>
-
-				{/* Subtasks */}
-				<View
-					style={{
-						marginTop: 30,
-						marginBottom: 20,
-						flexDirection: "row",
-						justifyContent: "space-between",
+				<ScrollView
+					contentContainerStyle={{
+						flexGrow: 1,
+						paddingHorizontal: 20,
+						backgroundColor: "#303030",
 					}}
 				>
-					<Text
+					<View style={{ marginTop: 20 }}>
+						<Text
+							style={{
+								color: "white",
+								fontSize: 14,
+								fontWeight: "300",
+								marginBottom: 10,
+							}}
+						>
+							Task Description
+						</Text>
+						<Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
+							{expanded ? task.taskDescription : shortDescription}
+						</Text>
+						{isDescriptionLong && (
+							<TouchableOpacity
+								onPress={() => setExpanded(!expanded)}
+								style={{ marginTop: 10 }}
+							>
+								<Text style={{ color: "#1e90ff", fontSize: 16 }}>
+									{expanded ? "See Less" : "See More"}
+								</Text>
+							</TouchableOpacity>
+						)}
+					</View>
+
+					{/* Attachments Section */}
+					<View style={{ marginTop: 30 }}>
+						<Text
+							style={{
+								color: "white",
+								fontSize: 16,
+								fontWeight: "bold",
+								marginBottom: 20,
+							}}
+						>
+							Attachments
+						</Text>
+						<View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+							<TouchableOpacity
+								style={{
+									width: 50,
+									height: 50,
+									backgroundColor: "#303030",
+									borderRadius: 10,
+									borderWidth: 1,
+									borderColor: "#FFFFFF",
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+							>
+								<Ionicons name="add-outline" size={30} color="white" />
+							</TouchableOpacity>
+
+							{attachments.length > 0 ? (
+								attachments.map(
+									(attachment: any, index: number) => (
+										console.log(`${baseUrl}${attachment.attachmentPath}`),
+										(
+											<View
+												key={index}
+												style={{
+													width: 50,
+													height: 50,
+													marginRight: 10,
+													marginBottom: 10,
+													borderRadius: 10,
+													borderWidth: 1,
+													borderColor: "#FFFFFF",
+													overflow: "hidden",
+												}}
+											>
+												<Image
+													source={{
+														uri: `${baseUrl}${attachment.attachmentPath}`,
+													}}
+													// style={{ width: "100%", height: "100%" }}
+												/>
+											</View>
+										)
+									)
+								)
+							) : (
+								<Text
+									style={{ color: "white", fontSize: 14, fontStyle: "italic" }}
+								>
+									No attachments
+								</Text>
+							)}
+						</View>
+					</View>
+
+					{/* Subtasks */}
+					<View
 						style={{
-							fontSize: 18,
-							fontWeight: "bold",
-							color: "white",
-							marginTop: -4,
+							marginTop: 30,
+							marginBottom: 20,
+							flexDirection: "row",
+							justifyContent: "space-between",
 						}}
 					>
-						Subtasks
-					</Text>
-
-					<TouchableOpacity>
 						<Text
-							style={{ color: "#f2e29b" }}
-							onPress={() =>
-								navigation.navigate("EditSubTask", { taskId: taskId })
-							}
+							style={{
+								fontSize: 18,
+								fontWeight: "bold",
+								color: "white",
+								marginTop: -4,
+							}}
 						>
-							Edit/Add Subtask
+							Subtasks
 						</Text>
-					</TouchableOpacity>
-				</View>
 
-				{subtasks.map((subtask: any, index: any) => (
-					<SubTask
-						key={index}
-						title={subtask.subTaskName}
-						isCompleted={subtask.subtaskIsCompleted}
-						onToggle={() => {
-							// Handle subtask completion toggle logic here
-						}}
-					/>
-				))}
-			</ScrollView>
+						<TouchableOpacity>
+							<Text
+								style={{ color: "#f2e29b" }}
+								onPress={() =>
+									navigation.navigate("EditSubTask", { taskId: taskId })
+								}
+							>
+								Edit/Add Subtask
+							</Text>
+						</TouchableOpacity>
+					</View>
+
+					{subtasks.map((subtask: any, index: any) => (
+						<SubTask
+							key={index}
+							title={subtask.subTaskName}
+							isCompleted={subtask.subtaskIsCompleted}
+							onToggle={() => {
+								// Handle subtask completion toggle logic here
+							}}
+						/>
+					))}
+				</ScrollView>
+			</View>
 		</>
 	);
 }
