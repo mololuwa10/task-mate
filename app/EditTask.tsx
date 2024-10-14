@@ -211,7 +211,7 @@ export default function EditTask() {
 		value: string
 	) => {
 		const updatedSubTasks = [...subTasks];
-		updatedSubTasks[index][field] = value;
+		(updatedSubTasks[index] as any)[field] = value;
 		setSubTasks(updatedSubTasks);
 	};
 

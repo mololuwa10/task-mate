@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { postToDoItem, SubTask } from "@/lib/apiPostActions";
+import { CreateSubTaskDTO, postToDoItem, SubTask } from "@/lib/apiPostActions";
 import {
 	View,
 	ScrollView,
@@ -45,7 +45,7 @@ export default function CreateTask() {
 	>([]);
 	const [selectedCategory, setSelectedCategory] = useState("");
 	const [selectedPriority, setSelectedPriority] = useState("");
-	const [subTasks, setSubTasks] = useState<SubTask[]>([]);
+	const [subTasks, setSubTasks] = useState<CreateSubTaskDTO[]>([]);
 	const [images, setImages] = useState<string[]>([]);
 	const [subTaskDates, setSubTaskDates] = useState<Date[]>([]);
 	const [showSubTaskDatePickers, setShowSubTaskDatePickers] = useState<
@@ -127,7 +127,11 @@ export default function CreateTask() {
 	const addSubTask = () => {
 		setSubTasks([
 			...subTasks,
-			{ subTaskName: "", SubtaskDescription: "", SubtaskDueDate: "" },
+			{
+				SubTaskName: "",
+				SubtaskDescription: "",
+				DueDate: "",
+			},
 		]);
 	};
 
@@ -143,7 +147,7 @@ export default function CreateTask() {
 
 		if (selectedDate && selectedDate < dueDate) {
 			updateSubTaskDate(index, selectedDate);
-			updateSubTask(index, "SubtaskDueDate", selectedDate.toISOString());
+			updateSubTask(index, "DueDate", selectedDate.toISOString());
 		} else {
 			Toast.show({
 				type: "error",
@@ -163,11 +167,11 @@ export default function CreateTask() {
 
 	const updateSubTask = (
 		index: number,
-		field: keyof SubTask,
+		field: keyof CreateSubTaskDTO,
 		value: string
 	) => {
 		const updatedSubTasks = [...subTasks];
-		updatedSubTasks[index][field] = value;
+		(updatedSubTasks[index][field] as string) = value;
 		setSubTasks(updatedSubTasks);
 	};
 
@@ -280,147 +284,294 @@ export default function CreateTask() {
 	};
 
 	return (
-		<View style={{ flex: 1, backgroundColor: "#1c1c1c" }}>
-			<ScrollView style={{ flex: 1 }}>
-				{/* Header */}
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						paddingVertical: 20,
-						paddingHorizontal: 20,
-						paddingTop: Platform.OS === "ios" ? 50 : 45,
-						backgroundColor: "#1c1c1c",
-					}}
-				>
-					<TouchableOpacity onPress={() => navigation.goBack()}>
-						<Icon name="close" size={22} color="white" />
-					</TouchableOpacity>
-					<View style={{ flex: 1, alignItems: "center" }}>
-						<Text
-							style={{
-								fontSize: 18,
-								fontWeight: "bold",
-								color: "white",
-								textAlign: "center",
-							}}
-						>
-							Edit Task
-						</Text>
-					</View>
-				</View>
-
-				<View style={{ paddingVertical: 10, paddingHorizontal: 20 }}>
-					<Text
-						style={{
-							color: "white",
-							fontSize: 20,
-							fontWeight: "600",
-						}}
-					>
-						Sub-tasks
-					</Text>
-
-					<TouchableOpacity
+		<>
+			<View style={{ flex: 1, backgroundColor: "#1c1c1c" }}>
+				<ScrollView style={{ flex: 1 }}>
+					{/* Header */}
+					<View
 						style={{
 							flexDirection: "row",
 							alignItems: "center",
-							backgroundColor: "#2c2c2c",
-							borderRadius: 10,
-							marginBottom: 20,
-							padding: 10,
-							paddingHorizontal: 15,
-							marginTop: 15,
+							paddingVertical: 20,
+							paddingHorizontal: 20,
+							paddingTop: Platform.OS === "ios" ? 50 : 45,
+							backgroundColor: "#1c1c1c",
 						}}
-						onPress={addSubTask}
 					>
-						<Icon name="plus" size={20} color="white" />
-						<Text
-							style={{
-								backgroundColor: "#2c2c2c",
-								color: "white",
-								paddingHorizontal: 15,
-								paddingVertical: 10,
-								borderRadius: 10,
-							}}
-						>
-							Add a Subtask
-						</Text>
-					</TouchableOpacity>
+						<TouchableOpacity onPress={() => navigation.goBack()}>
+							<Icon name="close" size={22} color="white" />
+						</TouchableOpacity>
+						<View style={{ flex: 1, alignItems: "center" }}>
+							<Text
+								style={{
+									fontSize: 18,
+									fontWeight: "bold",
+									color: "white",
+									textAlign: "center",
+								}}
+							>
+								Create Task
+							</Text>
+						</View>
+					</View>
 
-					{subTasks.map((subtask, index) => (
-						<View
-							key={index}
-							style={{ flex: 1, alignItems: "center", marginBottom: 20 }}
+					<View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+						<Text style={styles.label}>Task Name</Text>
+						<TextInput
+							style={styles.input}
+							placeholderTextColor="#777"
+							value={taskName}
+							onChangeText={setTaskName}
+						/>
+
+						<Text style={styles.label}>Task Description</Text>
+						<TextInput
+							style={[styles.input, { height: 80, textAlignVertical: "top" }]}
+							placeholder="Hey guys! 👋\nMake wireframe first & complete this task asap! Send me update daily!"
+							placeholderTextColor="#777"
+							multiline={true}
+							value={taskDescription}
+							onChangeText={setTaskDescription}
+						/>
+
+						<Text style={styles.label}>Start Date</Text>
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								backgroundColor: "#2c2c2c",
+								borderRadius: 10,
+								marginBottom: 20,
+								paddingHorizontal: 15,
+							}}
+							onPress={() => setShowStartDatePicker(true)}
 						>
+							<Icon name="calendar" size={20} color="white" />
+
 							<TextInput
-								style={{
-									backgroundColor: "#2c2c2c",
-									color: "white",
-									width: "100%",
-									paddingHorizontal: 15,
-									paddingVertical: 15,
-									borderRadius: 10,
-									marginBottom: 10,
-								}}
+								style={styles.input}
 								placeholderTextColor="#777"
+								value={
+									dateCreated ? dateCreated.toDateString() : "Select Start Date"
+								}
+								// onChangeText={setDateCreated}
+								editable={false}
 							/>
+						</TouchableOpacity>
+
+						{showStartDatePicker && (
+							<DateTimePicker
+								value={dateCreated || new Date()}
+								mode="date"
+								display="default"
+								onChange={(event, selectedDate) =>
+									handleDateChange(event, selectedDate, "startDate")
+								}
+							/>
+						)}
+
+						<Text style={styles.label}>Due Date</Text>
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								backgroundColor: "#2c2c2c",
+								borderRadius: 10,
+								marginBottom: 20,
+								paddingHorizontal: 15,
+							}}
+							onPress={() => setShowDueDatePicker(true)}
+						>
+							<Icon name="calendar" size={20} color="white" />
+
 							<TextInput
-								style={{
-									backgroundColor: "#2c2c2c",
-									color: "white",
-									width: "100%",
-									paddingHorizontal: 15,
-									paddingVertical: 15,
-									borderRadius: 10,
-									marginBottom: 10,
-								}}
+								style={styles.input}
+								// placeholder="August 25, 2023"
 								placeholderTextColor="#777"
+								value={dueDate ? dueDate.toDateString() : "Select Due Date"}
+								editable={false} // Assuming you'll implement a date picker here
 							/>
+						</TouchableOpacity>
+
+						{showDueDatePicker && (
+							<DateTimePicker
+								value={dueDate || new Date()}
+								mode="date"
+								display="default"
+								onChange={(event, selectedDate) =>
+									handleDateChange(event, selectedDate, "dueDate")
+								}
+							/>
+						)}
+
+						<Text style={styles.label}>Select Category</Text>
+						<RNPickerSelect
+							onValueChange={(value) => setSelectedCategory(value)}
+							items={categories}
+							style={pickerSelectStyles}
+							placeholder={{ label: "Select Category", value: null }}
+							value={selectedCategory}
+						/>
+
+						<Text style={styles.label}>Select Priority</Text>
+						<RNPickerSelect
+							onValueChange={(value) => setSelectedPriority(value)}
+							items={priorities}
+							style={pickerSelectStyles}
+							placeholder={{ label: "Select Priority", value: null }}
+							value={selectedPriority}
+						/>
+
+						<Text style={styles.label}>Attachments</Text>
+						<ScrollView
+							horizontal={true}
+							style={{ flexDirection: "row", marginBottom: 20 }}
+						>
 							<TouchableOpacity
 								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									backgroundColor: "#2c2c2c",
+									width: 60,
+									height: 60,
 									borderRadius: 10,
-									marginBottom: 20,
-									width: "100%",
-									paddingHorizontal: 15,
+									backgroundColor: "#2c2c2c",
+									justifyContent: "center",
+									alignItems: "center",
+									marginRight: 10,
 								}}
-								onPress={() => toggleSubTaskDatePicker(index)}
+								onPress={selectImage}
 							>
-								<Icon name="calendar" size={20} color="white" />
+								<Icon name="plus" size={20} color="white" />
+							</TouchableOpacity>
+
+							{images.map((uri, index) => (
+								<Image
+									key={index}
+									source={{ uri }}
+									style={{
+										width: 60,
+										height: 60,
+										borderRadius: 10,
+										marginRight: 10,
+									}}
+								/>
+							))}
+						</ScrollView>
+
+						<Text style={styles.label}>Sub-task</Text>
+
+						<TouchableOpacity
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								backgroundColor: "#2c2c2c",
+								borderRadius: 10,
+								marginBottom: 20,
+								padding: 10,
+
+								paddingHorizontal: 15,
+							}}
+							onPress={addSubTask}
+						>
+							<Icon name="plus" size={20} color="white" />
+							<Text
+								style={{
+									backgroundColor: "#2c2c2c",
+									color: "white",
+									paddingHorizontal: 15,
+									paddingVertical: 10,
+									borderRadius: 10,
+								}}
+							>
+								Add a Subtask
+							</Text>
+						</TouchableOpacity>
+
+						{subTasks.map((subtask, index) => (
+							<View
+								key={index}
+								style={{
+									flex: 1,
+									alignItems: "center",
+									marginBottom: 20,
+								}}
+							>
 								<TextInput
 									style={{
 										backgroundColor: "#2c2c2c",
 										color: "white",
+										width: "100%",
 										paddingHorizontal: 15,
-										paddingVertical: 10,
+										paddingVertical: 15,
 										borderRadius: 10,
-										marginBottom: 20,
+										marginBottom: 10,
 									}}
+									placeholder={`Subtask Name ${index + 1}`}
 									placeholderTextColor="#777"
-									editable={false}
-								/>
-							</TouchableOpacity>
-
-							{showSubTaskDatePickers[index] && (
-								<DateTimePicker
-									value={subTaskDates[index] || new Date()}
-									mode="date"
-									display="default"
-									onChange={(event, selectedDate) =>
-										onSubTaskDateChange(event, selectedDate, index)
+									value={subtask.SubTaskName}
+									onChangeText={(text) =>
+										updateSubTask(index, "SubTaskName", text)
 									}
 								/>
-							)}
+								<TextInput
+									style={{
+										backgroundColor: "#2c2c2c",
+										color: "white",
+										width: "100%",
+										paddingHorizontal: 15,
+										paddingVertical: 15,
+										borderRadius: 10,
+										marginBottom: 10,
+									}}
+									placeholder={`Subtask Description ${index + 1}`}
+									placeholderTextColor="#777"
+									value={subtask.SubtaskDescription}
+									onChangeText={(text) =>
+										updateSubTask(index, "SubtaskDescription", text)
+									}
+								/>
+								<TouchableOpacity
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										backgroundColor: "#2c2c2c",
+										borderRadius: 10,
+										marginBottom: 20,
+										width: "100%",
+										paddingHorizontal: 15,
+									}}
+									onPress={() => toggleSubTaskDatePicker(index)}
+								>
+									<Icon name="calendar" size={20} color="white" />
+									<TextInput
+										style={styles.input}
+										placeholder={`Due Date ${index + 1}`}
+										placeholderTextColor="#777"
+										value={
+											subTaskDates[index]
+												? subTaskDates[index].toDateString()
+												: "Select Date"
+										}
+										editable={false}
+									/>
+								</TouchableOpacity>
 
-							<TouchableOpacity onPress={() => removeSubtask(index)}>
-								<Icon name="trash" size={20} color="red" />
-							</TouchableOpacity>
-						</View>
-					))}
-				</View>
+								{showSubTaskDatePickers[index] && (
+									<DateTimePicker
+										value={subTaskDates[index] || new Date()}
+										mode="date"
+										display="default"
+										onChange={(event, selectedDate) =>
+											onSubTaskDateChange(event, selectedDate, index)
+										}
+									/>
+								)}
+
+								<TouchableOpacity onPress={() => removeSubtask(index)}>
+									<Icon name="trash" size={20} color="red" />
+								</TouchableOpacity>
+							</View>
+						))}
+					</View>
+				</ScrollView>
 
 				{/* Save Changes Button */}
 				<TouchableOpacity
@@ -438,8 +589,8 @@ export default function CreateTask() {
 						Save Changes
 					</Text>
 				</TouchableOpacity>
-			</ScrollView>
-		</View>
+			</View>
+		</>
 	);
 }
 

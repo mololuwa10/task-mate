@@ -25,15 +25,15 @@ export interface CreateToDoItemsDTO {
 	Priority: string;
 	CategoryId?: number;
 	CategoryName?: string;
-	Subtasks?: SubTask[];
+	Subtasks?: CreateSubTaskDTO[];
 	Recurrence?: Recurrence;
 }
 
 export interface CreateSubTaskDTO {
 	SubTaskName: string;
 	SubtaskDescription: string;
-	SubtaskDueDate: string;
-	SubtaskIsCompleted: boolean;
+	DueDate: string;
+	// SubtaskIsCompleted: boolean;
 }
 
 export const ip =
