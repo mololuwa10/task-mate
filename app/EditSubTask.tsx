@@ -97,6 +97,7 @@ export default function EditSubTask() {
 		const updatedSubTasks = [...subTasks];
 		(updatedSubTasks[index] as any)[field] = value;
 		setSubTasks(updatedSubTasks);
+		console.log("updatedSubTasks", updatedSubTasks);
 	};
 
 	const updateSubTaskDate = (index: number, selectedDate: Date) => {
