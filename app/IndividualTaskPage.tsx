@@ -1,9 +1,14 @@
 import { getToDoItemById } from "@/lib/dbModel";
 import { Ionicons } from "@expo/vector-icons";
-import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
+import {
+	RouteProp,
+	useRoute,
+	useNavigation,
+	useFocusEffect,
+} from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
 	View,
 	Text,
@@ -13,11 +18,18 @@ import {
 	TouchableOpacity,
 	Platform,
 	ActivityIndicator,
-	Image, // Add this import statement
+	Image,
+	Animated,
+	Easing,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Constants from "expo-constants";
 import { StackNavigationProp } from "@react-navigation/stack";
+import {
+	markSubTaskAsCompleted,
+	markSubTaskAsInCompleted,
+	updateSubTasks,
+} from "@/lib/apiPutActions";
 
 type RootStackParamList = {
 	TaskList: undefined;
@@ -32,12 +44,32 @@ type IndividualTaskPageRouteProp = RouteProp<
 const SubTask = ({
 	title,
 	isCompleted,
+	subTaskId,
 	onToggle,
 }: {
 	title: string;
 	isCompleted: boolean;
-	onToggle: () => void;
+	subTaskId: number | string;
+	onToggle: (subTaskId: number | string, newState: boolean) => void;
 }) => {
+	const [animationValue] = useState(new Animated.Value(isCompleted ? 1 : 0));
+	const toggleTask = () => {
+		// Trigger the animation when task is toggled
+		Animated.timing(animationValue, {
+			toValue: isCompleted ? 0 : 1,
+			duration: 500,
+			easing: Easing.linear,
+			useNativeDriver: false,
+		}).start();
+
+		const newState = !isCompleted;
+		onToggle(subTaskId, newState);
+	};
+
+	const textColor = animationValue.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["#FFFFFF", "#B0B0B0"],
+	});
 	return (
 		<View
 			style={{
@@ -50,22 +82,27 @@ const SubTask = ({
 				borderColor: "#FFFFFF",
 			}}
 		>
-			<TouchableOpacity onPress={onToggle} style={{ marginRight: 10 }}>
+			<TouchableOpacity onPress={toggleTask} style={{ marginRight: 10 }}>
 				<Ionicons
 					name={isCompleted ? "checkmark-circle" : "ellipse-outline"}
 					size={25}
 					color={isCompleted ? "#4CAF50" : "#B0B0B0"}
 				/>
 			</TouchableOpacity>
-			<Text
-				style={[styles.subtaskText, isCompleted && styles.subtaskCompleted]}
+			<Animated.Text
+				style={[
+					styles.subtaskText,
+					{
+						textDecorationLine: isCompleted ? "line-through" : "none",
+						color: textColor,
+					},
+				]}
 			>
 				{title}
-			</Text>
+			</Animated.Text>
 		</View>
 	);
 };
-
 export default function IndividualTaskPage() {
 	const route = useRoute();
 	const { taskId } = (route.params as IndividualTaskPageRouteProp) || {};
@@ -75,28 +112,72 @@ export default function IndividualTaskPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [expanded, setExpanded] = useState(false);
 
-	useEffect(() => {
-		const fetchTask = async () => {
-			setLoading(true);
-			try {
-				const fetchedTask = await getToDoItemById(taskId);
-				if (fetchedTask) {
-					console.log("Fetched Task:", fetchedTask.subtasks);
-					setTask(fetchedTask);
-				} else {
-					setError("Failed to load task");
-				}
-			} catch (error) {
-				setError("Error fetching task");
-			} finally {
-				setLoading(false);
-			}
-		};
+	useFocusEffect(
+		useCallback(() => {
+			let isMounted = true;
 
-		if (taskId) {
-			fetchTask();
+			const fetchTask = async () => {
+				setLoading(true);
+				try {
+					const fetchedTask = await getToDoItemById(taskId);
+					if (fetchedTask) {
+						console.log("Fetched Task:", fetchedTask.subtasks);
+						setTask(fetchedTask);
+					} else {
+						setError("Failed to load task");
+					}
+				} catch (error) {
+					setError("Error fetching task");
+				} finally {
+					setLoading(false);
+				}
+			};
+
+			if (taskId) {
+				fetchTask();
+			}
+
+			return () => {
+				isMounted = false;
+			};
+		}, [])
+	);
+
+	const handleSubTaskCompleted = async (
+		subTaskId: number | string,
+		newState: boolean
+	) => {
+		if (!subTaskId) {
+			console.error("Subtask ID is missing");
+			return;
 		}
-	}, [taskId]);
+		try {
+			// Update the subtask's completion status on the server
+			if (newState) {
+				await markSubTaskAsCompleted(subTaskId);
+			} else {
+				await markSubTaskAsInCompleted(subTaskId);
+			}
+
+			// Update the local state after successful call
+			setTask((prevTask: any) => {
+				const updatedSubtasks = prevTask.subtasks.$values.map(
+					(subtask: any) => {
+						if (subtask.subTaskId === subTaskId) {
+							return { ...subtask, subtaskIsCompleted: newState };
+						}
+						return subtask;
+					}
+				);
+				return {
+					...prevTask,
+					subtasks: { ...prevTask.subtasks, $values: updatedSubtasks },
+				};
+			});
+		} catch (error) {
+			console.error("Error updating subtask:", error);
+		}
+	};
 
 	if (loading) {
 		return (
@@ -122,7 +203,7 @@ export default function IndividualTaskPage() {
 		);
 	}
 
-	const descriptionLimit = 15; // Set a limit for words
+	const descriptionLimit = 15;
 	const descriptionWords = task.taskDescription.split(" ");
 	const isDescriptionLong = descriptionWords.length > descriptionLimit;
 	const shortDescription =
@@ -186,7 +267,6 @@ export default function IndividualTaskPage() {
 						paddingStart: 20,
 						paddingHorizontal: 20,
 						paddingBottom: 30,
-						// marginTop: -150,
 					}}
 				>
 					<Text
@@ -245,6 +325,21 @@ export default function IndividualTaskPage() {
 						</Text>
 						<Text style={{ color: "white", fontSize: 14, fontWeight: "600" }}>
 							{task.priority}
+						</Text>
+					</View>
+
+					<View
+						style={{
+							flexDirection: "row",
+							marginTop: 20,
+							gap: 77,
+						}}
+					>
+						<Text style={{ color: "white", fontSize: 14, fontWeight: "300" }}>
+							Task Checked:
+						</Text>
+						<Text style={{ color: "white", fontSize: 14, fontWeight: "600" }}>
+							{task.isCompleted ? "Completed" : "Not Completed"}
 						</Text>
 					</View>
 				</View>
@@ -380,14 +475,13 @@ export default function IndividualTaskPage() {
 						</TouchableOpacity>
 					</View>
 
-					{subtasks.map((subtask: any, index: any) => (
+					{subtasks.map((subtask: any) => (
 						<SubTask
-							key={index}
+							key={subtask.subTaskId}
 							title={subtask.subTaskName}
 							isCompleted={subtask.subtaskIsCompleted}
-							onToggle={() => {
-								// Handle subtask completion toggle logic here
-							}}
+							subTaskId={subtask.subTaskId}
+							onToggle={handleSubTaskCompleted}
 						/>
 					))}
 				</ScrollView>
@@ -396,9 +490,6 @@ export default function IndividualTaskPage() {
 	);
 }
 
-// {
-// 	// uri: `${baseUrl}${attachment.attachmentPath}`,
-// }
 const styles = StyleSheet.create({
 	subtaskText: {
 		fontSize: 16,

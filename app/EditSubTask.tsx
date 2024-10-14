@@ -9,11 +9,14 @@ import {
 	ScrollView,
 	Platform,
 	TextInput,
+	ActivityIndicator,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/FontAwesome";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getToDoItemById } from "@/lib/dbModel";
+import { updateSubTasks } from "@/lib/apiPutActions";
+import { postSubTask } from "@/lib/apiPostActions";
 
 type RootStackParamList = {
 	TaskList: undefined;
@@ -50,6 +53,8 @@ export default function EditSubTask() {
 
 					setTask(fetchedTask);
 
+					setDueDate(new Date(fetchedTask.dueDate));
+
 					// Set the fetched subtasks to state
 					setSubTasks(fetchedTask.subtasks.$values);
 					// Map the dates if available
@@ -78,17 +83,19 @@ export default function EditSubTask() {
 	const addSubTask = () => {
 		setSubTasks([
 			...subTasks,
-			{ subTaskName: "", subtaskDescription: "", subtaskDueDate: "" },
+			{
+				subTaskId: "",
+				subTaskName: "",
+				subtaskDescription: "",
+				subtaskDueDate: "",
+				subtaskIsCompleted: false,
+			},
 		]);
 	};
 
-	const updateSubTask = (
-		index: number,
-		field: keyof SubTask,
-		value: string
-	) => {
+	const updateSubTask = (index: number, field: keyof SubTask, value: any) => {
 		const updatedSubTasks = [...subTasks];
-		updatedSubTasks[index][field] = value;
+		(updatedSubTasks[index] as any)[field] = value;
 		setSubTasks(updatedSubTasks);
 	};
 
@@ -107,6 +114,8 @@ export default function EditSubTask() {
 		const updatedShowPickers = [...showSubTaskDatePickers];
 		updatedShowPickers[index] = Platform.OS === "ios";
 		setShowSubTaskDatePickers(updatedShowPickers);
+
+		console.log("selectedDate", selectedDate, "dueDate", dueDate);
 
 		if (selectedDate && selectedDate < dueDate) {
 			updateSubTaskDate(index, selectedDate);
@@ -131,6 +140,69 @@ export default function EditSubTask() {
 	// Function to remove a subtask
 	const removeSubtask = (index: number) => {
 		setSubTasks(subTasks.filter((_, i) => i !== index));
+	};
+
+	const handleSaveChanges = async () => {
+		setLoading(true);
+		try {
+			for (let i = 0; i < subTasks.length; i++) {
+				const subtask = subTasks[i];
+				const { subTaskId } = subTasks[i];
+
+				const updatedSubtask = {
+					...subtask,
+					subtaskDueDate: subTaskDates[i].toISOString(),
+				};
+
+				if (subTaskId) {
+					const response = await updateSubTasks(updatedSubtask, subTaskId);
+					if (response) {
+						Toast.show({
+							type: "success",
+							text1: "Subtasks Updated",
+							text2: "All subtasks have been updated successfully",
+						});
+
+						navigation.navigate("IndividualTaskPage");
+
+						console.log("Subtask updated successfully:", response);
+					} else {
+						console.error("Failed to update subtask");
+					}
+				} else {
+					const response = await postSubTask(
+						{
+							SubTaskName: subtask.subTaskName,
+							SubtaskDescription: subtask.subtaskDescription,
+							SubtaskDueDate: subtask.subtaskDueDate,
+						},
+						task.taskId
+					);
+					if (response) {
+						Toast.show({
+							type: "success",
+							text1: "Subtasks Created",
+							text2: "New subtasks have been added successfully",
+						});
+
+						navigation.navigate("IndividualTaskPage");
+
+						console.log("Subtask created successfully:", response);
+					} else {
+						console.error("Failed to create subtask");
+					}
+				}
+			}
+		} catch (error) {
+			console.error(error);
+			Toast.show({
+				type: "error",
+				text1: "Error",
+				text2: "Failed to save changes",
+			});
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -322,11 +394,17 @@ export default function EditSubTask() {
 						borderRadius: 10,
 						alignItems: "center",
 					}}
-					// onPress={handleCreateTask}
+					onPress={handleSaveChanges}
 				>
-					<Text style={{ color: "#1c1c1c", fontSize: 16, fontWeight: "bold" }}>
-						Save Changes
-					</Text>
+					{loading ? (
+						<ActivityIndicator size="small" color="#ffffff" />
+					) : (
+						<Text
+							style={{ color: "#1c1c1c", fontSize: 16, fontWeight: "bold" }}
+						>
+							Save Changes
+						</Text>
+					)}
 				</TouchableOpacity>
 			</View>
 		</>

@@ -9,7 +9,7 @@ import Constants from "expo-constants";
 export interface SubTask {
 	subTaskName: string;
 	subtaskDescription: string;
-	subtaskDueDate: string;
+	subtaskDueDate: string | null;
 	subtaskIsCompleted: boolean;
 }
 
@@ -31,7 +31,10 @@ export interface CreateToDoItemsDTO {
 const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
 
 // Update SubTask
-export const updateSubTask = async (subTask: SubTask, subTaskId: number) => {
+export const updateSubTasks = async (
+	subTask: SubTask,
+	subTaskId: number | string
+) => {
 	const token = await AsyncStorage.getItem("token");
 
 	if (!token) {
@@ -62,6 +65,74 @@ export const updateSubTask = async (subTask: SubTask, subTaskId: number) => {
 		}
 	} catch (error: any) {
 		console.error("Error updating subtask: ", error.message);
+		return null;
+	}
+};
+
+// Mark subtask as completed
+export const markSubTaskAsCompleted = async (subTaskId: number | string) => {
+	const token = await AsyncStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("No token found");
+	}
+
+	try {
+		const response = await fetch(
+			`http://${ip}:5133/api/subtasks/${subTaskId}/complete`,
+			{
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+
+		if (response.ok) {
+			const data = await response.json();
+			console.log("Subtask marked as completed: ", data);
+			return data;
+		} else {
+			const errorText = await response.text();
+			console.error("Error marking subtask as completed: ", errorText);
+			return null;
+		}
+	} catch (error: any) {
+		console.error("Error marking as completed", error.message);
+		return null;
+	}
+};
+
+// Mark subtask as completed
+export const markSubTaskAsInCompleted = async (subTaskId: number | string) => {
+	const token = await AsyncStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("No token found");
+	}
+
+	try {
+		const response = await fetch(
+			`http://${ip}:5133/api/subtasks/${subTaskId}/incomplete`,
+			{
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+
+		if (response.ok) {
+			const data = await response.json();
+			console.log("Subtask marked as in-completed: ", data);
+			return data;
+		} else {
+			const errorText = await response.text();
+			console.error("Error marking subtask as in-completed: ", errorText);
+			return null;
+		}
+	} catch (error: any) {
+		console.error("Error marking as in-completed", error.message);
 		return null;
 	}
 };

@@ -7,9 +7,11 @@ import { NetworkInfo } from "react-native-network-info";
 import Constants from "expo-constants";
 
 export interface SubTask {
+	subTaskId: string | number;
 	subTaskName: string;
 	subtaskDescription: string;
 	subtaskDueDate: string;
+	subtaskIsCompleted: boolean;
 }
 
 export interface Recurrence {
@@ -27,8 +29,17 @@ export interface CreateToDoItemsDTO {
 	Recurrence?: Recurrence;
 }
 
-const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
+export interface CreateSubTaskDTO {
+	SubTaskName: string;
+	SubtaskDescription: string;
+	SubtaskDueDate: string;
+	SubtaskIsCompleted: boolean;
+}
 
+export const ip =
+	Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
+
+// TASK ==============================================================
 export const postToDoItem = async (
 	toDoItem: CreateToDoItemsDTO,
 	attachments: File[]
@@ -68,6 +79,45 @@ export const postToDoItem = async (
 		}
 	} catch (error: any) {
 		console.error("Error creating task: ", error.message);
+		return null;
+	}
+};
+
+// =====================================================================
+
+// SUBTASK ==============================================================
+// Create SubTask
+export const postSubTask = async (subTaskData: any, taskId: number) => {
+	const token = await AsyncStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("No token found");
+	}
+
+	try {
+		const response = await fetch(`http://${ip}:5133/api/subtasks`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({
+				...subTaskData,
+				taskId: taskId,
+			}),
+		});
+		// Check if the response is not ok
+		if (!response.ok) {
+			const errorText = await response.text();
+			console.error("Failed to create subtask", errorText);
+			throw new Error("Failed to create subtask");
+		}
+
+		const jsonResponse = await response.json();
+		console.log("Subtask created successfully", jsonResponse);
+		return jsonResponse;
+	} catch (error: any) {
+		console.error("Error creating subtask: ", error.message);
 		return null;
 	}
 };
