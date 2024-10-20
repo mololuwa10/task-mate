@@ -91,7 +91,8 @@ export default function Navigation() {
 						headerShown: false,
 					}}
 				/>
-				<Tab.Screen
+
+				{/* <Tab.Screen
 					name="Calendar"
 					component={HomeScreen}
 					options={{
@@ -106,7 +107,8 @@ export default function Navigation() {
 						headerShown: false,
 						tabBarLabel: "Calendar",
 					}}
-				/>
+				/> */}
+
 				<Tab.Screen
 					name="Add"
 					component={HomeScreen}
@@ -123,7 +125,7 @@ export default function Navigation() {
 						headerShown: false,
 					}}
 				/>
-				<Tab.Screen
+				{/* <Tab.Screen
 					name="Chat"
 					component={HomeScreen}
 					options={{
@@ -137,7 +139,7 @@ export default function Navigation() {
 						tabBarBadge: 6,
 						headerShown: false,
 					}}
-				/>
+				/> */}
 
 				<Tab.Screen
 					name="Profile"

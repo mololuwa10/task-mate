@@ -79,7 +79,7 @@ export const markSubTaskAsCompleted = async (subTaskId: number | string) => {
 
 	try {
 		const response = await fetch(
-			`http://${ip}:5133/api/subtasks/${subTaskId}/complete`,
+			`http://${ip}:5133/api/subtasks/complete/${subTaskId}`,
 			{
 				method: "PUT",
 				headers: {
@@ -113,7 +113,7 @@ export const markSubTaskAsInCompleted = async (subTaskId: number | string) => {
 
 	try {
 		const response = await fetch(
-			`http://${ip}:5133/api/subtasks/${subTaskId}/incomplete`,
+			`http://${ip}:5133/api/subtasks/in-complete/${subTaskId}`,
 			{
 				method: "PUT",
 				headers: {
