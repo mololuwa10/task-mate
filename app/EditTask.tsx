@@ -171,7 +171,13 @@ export default function EditTask() {
 	const addSubTask = () => {
 		setSubTasks([
 			...subTasks,
-			{ subTaskName: "", SubtaskDescription: "", SubtaskDueDate: "" },
+			{
+				subTaskId: "",
+				subTaskName: "",
+				subtaskDescription: "",
+				subtaskDueDate: "",
+				subtaskIsCompleted: false,
+			},
 		]);
 	};
 
@@ -187,7 +193,7 @@ export default function EditTask() {
 
 		if (selectedDate && selectedDate < dueDate) {
 			updateSubTaskDate(index, selectedDate);
-			updateSubTask(index, "SubtaskDueDate", selectedDate.toISOString());
+			updateSubTask(index, "subtaskDueDate", selectedDate.toISOString());
 		} else {
 			Toast.show({
 				type: "error",
@@ -577,7 +583,7 @@ export default function EditTask() {
 							value={selectedPriority}
 						/>
 
-						<Text style={styles.label}>Attachments</Text>
+						{/* <Text style={styles.label}>Attachments</Text>
 						<ScrollView
 							horizontal={true}
 							style={{ flexDirection: "row", marginBottom: 20 }}
@@ -609,7 +615,7 @@ export default function EditTask() {
 									}}
 								/>
 							))}
-						</ScrollView>
+						</ScrollView> */}
 					</View>
 				</ScrollView>
 
@@ -627,7 +633,7 @@ export default function EditTask() {
 					onPress={handleCreateTask}
 				>
 					<Text style={{ color: "#1c1c1c", fontSize: 16, fontWeight: "bold" }}>
-						Create Task
+						Save Changes
 					</Text>
 				</TouchableOpacity>
 			</View>

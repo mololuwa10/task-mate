@@ -378,7 +378,7 @@ export default function IndividualTaskPage() {
 					</View>
 
 					{/* Attachments Section */}
-					<View style={{ marginTop: 30 }}>
+					{/* <View style={{ marginTop: 30 }}>
 						<Text
 							style={{
 								color: "white",
@@ -441,7 +441,7 @@ export default function IndividualTaskPage() {
 								</Text>
 							)}
 						</View>
-					</View>
+					</View> */}
 
 					{/* Subtasks */}
 					<View

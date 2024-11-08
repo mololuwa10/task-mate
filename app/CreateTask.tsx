@@ -36,7 +36,7 @@ export default function CreateTask() {
 	const navigation = useNavigation<CreateTaskNavigationProp>();
 	const [taskName, setTaskName] = useState("");
 	const [taskDescription, setTaskDescription] = useState("");
-	const [dateCreated, setDateCreated] = useState(new Date());
+	const [dateCreated, setDateCreated] = useState<Date | null>(null);
 	const [dueDate, setDueDate] = useState(new Date());
 	const [showStartDatePicker, setShowStartDatePicker] = useState(false);
 	const [showDueDatePicker, setShowDueDatePicker] = useState(false);
@@ -86,38 +86,29 @@ export default function CreateTask() {
 		selectedDate: Date | undefined,
 		type: string
 	) => {
-		// Get the current date (without time for comparison)
-		const now = new Date();
-		now.setHours(0, 0, 0, 0);
-
-		if (type === "startDate") {
-			setShowStartDatePicker(Platform.OS === "ios");
-
-			if (selectedDate) {
-				// Ensure the created date is today or in the future
-				if (selectedDate >= now && selectedDate <= dueDate) {
+		if (selectedDate) {
+			// Define the date range conditions here
+			if (type === "startDate") {
+				setShowStartDatePicker(false);
+				if (selectedDate <= dueDate) {
 					setDateCreated(selectedDate);
 				} else {
 					Toast.show({
 						type: "error",
-						text1: "Invalid Date Created",
+						text1: "Invalid Start Date",
 						text2:
-							"The date cannot be in the past or later than the main task due date.",
+							"The start date cannot be later than the main task due date.",
 					});
 				}
-			}
-		} else if (type === "dueDate") {
-			setShowDueDatePicker(Platform.OS === "ios");
-
-			if (selectedDate) {
-				// Ensure the due date is after the date created
-				if (selectedDate >= dateCreated) {
+			} else if (type === "dueDate") {
+				setShowDueDatePicker(false);
+				if (selectedDate >= (dateCreated || new Date())) {
 					setDueDate(selectedDate);
 				} else {
 					Toast.show({
 						type: "error",
 						text1: "Invalid Due Date",
-						text2: "The due date cannot be earlier than the created date.",
+						text2: "The due date cannot be earlier than the start date.",
 					});
 				}
 			}
@@ -217,7 +208,7 @@ export default function CreateTask() {
 
 	const handleCreateTask = async () => {
 		// Create a new Date object with specific time
-		const createdDateWithTime = new Date(dateCreated);
+		const createdDateWithTime = new Date(dateCreated || new Date());
 		createdDateWithTime.setUTCHours(23, 59, 59, 0);
 
 		const dueDateWithTime = new Date(dueDate);
@@ -226,7 +217,7 @@ export default function CreateTask() {
 		// Format the due date to ISO 8601 string
 		const formattedDueDate = dueDateWithTime.toISOString();
 
-		const formattedDateCreated = dateCreated.toISOString();
+		const formattedDateCreated = createdDateWithTime.toISOString();
 		console.log(formattedDateCreated);
 
 		// Prepare the ToDo item data
@@ -361,7 +352,7 @@ export default function CreateTask() {
 
 						{showStartDatePicker && (
 							<DateTimePicker
-								value={dateCreated || new Date()}
+								value={dateCreated || new Date()} // default to today's date
 								mode="date"
 								display="default"
 								onChange={(event, selectedDate) =>
@@ -422,7 +413,7 @@ export default function CreateTask() {
 							value={selectedPriority}
 						/>
 
-						<Text style={styles.label}>Attachments</Text>
+						{/* <Text style={styles.label}>Attachments</Text>
 						<ScrollView
 							horizontal={true}
 							style={{ flexDirection: "row", marginBottom: 20 }}
@@ -454,7 +445,7 @@ export default function CreateTask() {
 									}}
 								/>
 							))}
-						</ScrollView>
+						</ScrollView> */}
 
 						<Text style={styles.label}>Sub-task</Text>
 

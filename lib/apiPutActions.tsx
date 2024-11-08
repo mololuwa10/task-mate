@@ -30,6 +30,16 @@ export interface CreateToDoItemsDTO {
 
 const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
 
+// TASKS ==============================================================
+// Edit Task
+export const updateToDoItem = async (
+	taskId: number | string,
+	updatedTask: CreateToDoItemsDTO
+) => {
+	const token = await AsyncStorage.getItem("token");
+};
+
+// SUBTASKS ==============================================================
 // Update SubTask
 export const updateSubTasks = async (
 	subTask: SubTask,

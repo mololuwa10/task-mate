@@ -21,6 +21,7 @@ export interface Recurrence {
 export interface CreateToDoItemsDTO {
 	TaskName: string;
 	TaskDescription: string;
+	DateCreated?: string;
 	DueDate?: string;
 	Priority: string;
 	CategoryId?: number;
