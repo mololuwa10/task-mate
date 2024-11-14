@@ -1,3 +1,4 @@
+import React from "react";
 import { TransitionPresets } from "@react-navigation/stack";
 import { Stack } from "expo-router";
 import Toast from "react-native-toast-message";

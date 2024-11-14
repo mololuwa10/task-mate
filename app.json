@@ -44,6 +44,7 @@
 		"plugins": ["expo-router"],
 		"experiments": {
 			"typedRoutes": true
-		}
+		},
+		"newArchEnabled": true
 	}
 }

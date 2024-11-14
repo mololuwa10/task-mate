@@ -283,7 +283,11 @@ export default function EditTask() {
 			DueDate: formattedDueDate, // Correctly formatted due date
 			Priority: selectedPriority,
 			CategoryId: selectedCategory ? parseInt(selectedCategory) : undefined,
-			Subtasks: subTasks,
+			Subtasks: subTasks.map((subtask) => ({
+				SubTaskName: subtask.subTaskName,
+				SubtaskDescription: subtask.subtaskDescription,
+				DueDate: subtask.subtaskDueDate,
+			})),
 		};
 
 		// Convert image uris to file objects

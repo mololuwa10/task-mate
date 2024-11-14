@@ -1,24 +1,24 @@
 import React from "react";
 import { Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+// import { useNavigation } from "@react-navigation/native";
+// import { StackNavigationProp } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-type RootStackParamList = {
-	SignInOptions: undefined;
-	// Add other screen names and their respective params here
-};
+// type RootStackParamList = {
+// 	SignInOptions: undefined;
+// 	// Add other screen names and their respective params here
+// };
 
-type LaunchScreenNavigationProp = StackNavigationProp<
-	RootStackParamList,
-	"SignInOptions"
->;
+// type LaunchScreenNavigationProp = StackNavigationProp<
+// 	RootStackParamList,
+// 	"SignInOptions"
+// >;
 
 export default function LaunchScreen() {
-	const navigation = useNavigation<LaunchScreenNavigationProp>();
-	const handlePress = () => {
-		navigation.navigate("SignInOptions");
-	};
+	// const navigation = useNavigation<LaunchScreenNavigationProp>();
+	// const handlePress = () => {
+	// 	navigation.navigate("SignInOptions");
+	// };
 	return (
 		<ScrollView
 			contentContainerStyle={{
@@ -63,7 +63,7 @@ export default function LaunchScreen() {
 				recusandae culpa similique deserunt veritatis rerum quo nostrum.
 			</Text>
 			<TouchableOpacity
-				onPress={handlePress}
+				// onPress={handlePress}
 				style={{
 					// backgroundColor: "#333333",
 					padding: 15,
