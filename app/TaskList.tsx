@@ -145,7 +145,7 @@ export default function TaskList() {
 						fontWeight: "bold",
 						color: "#fff",
 						marginStart: 10,
-						marginTop: 20,
+						marginTop: 10,
 					}}
 				>
 					Task List

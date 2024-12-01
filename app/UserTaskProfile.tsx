@@ -38,7 +38,7 @@ export default function UserTaskProfile() {
 					alignItems: "center",
 					paddingVertical: 20,
 					paddingHorizontal: 20,
-					paddingTop: Platform.OS === "ios" ? 50 : 45,
+					paddingTop: Platform.OS === "ios" ? 50 : 20,
 					zIndex: 10,
 				}}
 			>
