@@ -414,7 +414,7 @@ export default function EditTask() {
 								value={dateCreated || new Date()}
 								mode="date"
 								display="default"
-								onChange={(event, selectedDate) =>
+								onChange={(event: any, selectedDate: Date | undefined) =>
 									handleDateChange(event, selectedDate, "startDate")
 								}
 							/>
@@ -448,7 +448,7 @@ export default function EditTask() {
 								value={dueDate || new Date()}
 								mode="date"
 								display="default"
-								onChange={(event, selectedDate) =>
+								onChange={(event: any, selectedDate: Date | undefined) =>
 									handleDateChange(event, selectedDate, "dueDate")
 								}
 							/>

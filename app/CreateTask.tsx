@@ -355,7 +355,7 @@ export default function CreateTask() {
 								value={dateCreated || new Date()} // default to today's date
 								mode="date"
 								display="default"
-								onChange={(event, selectedDate) =>
+								onChange={(event: any, selectedDate: Date | undefined) =>
 									handleDateChange(event, selectedDate, "startDate")
 								}
 							/>
@@ -389,7 +389,7 @@ export default function CreateTask() {
 								value={dueDate || new Date()}
 								mode="date"
 								display="default"
-								onChange={(event, selectedDate) =>
+								onChange={(event: any, selectedDate: Date | undefined) =>
 									handleDateChange(event, selectedDate, "dueDate")
 								}
 							/>
@@ -550,7 +550,7 @@ export default function CreateTask() {
 										value={subTaskDates[index] || new Date()}
 										mode="date"
 										display="default"
-										onChange={(event, selectedDate) =>
+										onChange={(event: any, selectedDate: Date | undefined) =>
 											onSubTaskDateChange(event, selectedDate, index)
 										}
 									/>

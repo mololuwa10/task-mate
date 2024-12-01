@@ -56,10 +56,10 @@ export default function EditSubTask() {
 					setDueDate(new Date(fetchedTask.dueDate));
 
 					// Set the fetched subtasks to state
-					setSubTasks(fetchedTask.subtasks.$values);
+					setSubTasks(fetchedTask.subtasks);
 					// Map the dates if available
 					setSubTaskDates(
-						fetchedTask.subtasks.$values.map((subtask: SubTask) =>
+						fetchedTask.subtasks.map((subtask: SubTask) =>
 							subtask.subtaskDueDate
 								? new Date(subtask.subtaskDueDate)
 								: new Date()
@@ -360,7 +360,7 @@ export default function EditSubTask() {
 										value={subTaskDates[index] || new Date()}
 										mode="date"
 										display="default"
-										onChange={(event, date) =>
+										onChange={(event: any, date: Date | undefined) =>
 											onSubTaskDateChange(event, date, index)
 										}
 									/>

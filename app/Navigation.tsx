@@ -80,7 +80,7 @@ export default function Navigation() {
 					name="Home"
 					component={HomeScreen}
 					options={{
-						tabBarIcon: ({ focused }) => (
+						tabBarIcon: ({ focused }: { focused: boolean }) => (
 							<Ionicons
 								name="home-outline"
 								size={25}
@@ -113,10 +113,15 @@ export default function Navigation() {
 					name="Add"
 					component={HomeScreen}
 					options={{
-						tabBarIcon: ({ focused }) => (
+						tabBarIcon: ({ focused }: { focused: boolean }) => (
 							<Ionicons name="add" size={35} color="#000" />
 						),
-						tabBarButton: (props) => (
+						tabBarButton: (
+							props: React.JSX.IntrinsicAttributes & {
+								children: any;
+								onPress?: () => void;
+							}
+						) => (
 							<CustomTabBarButton
 								{...props}
 								onPress={() => navigation.navigate("CreateTask")} // Navigate to CreateTask
@@ -145,7 +150,7 @@ export default function Navigation() {
 					name="Profile"
 					component={MoreSection}
 					options={{
-						tabBarIcon: ({ focused }) => (
+						tabBarIcon: ({ focused }: { focused: boolean }) => (
 							<Ionicons
 								// name="settings-outline"
 								name="menu-outline"

@@ -1,19 +1,19 @@
 import LaunchScreen from "@/app/LaunchScreen";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchUserDetails } from "@/lib/auth";
-import Toast from "react-native-toast-message";
-import * as Network from "expo-network";
-import { NetworkInfo } from "react-native-network-info";
-import Config from "react-native-config";
-import Constants from "expo-constants";
+// import Toast from "react-native-toast-message";
+// import * as Network from "expo-network";
+// import { NetworkInfo } from "react-native-network-info";
+// import Config from "react-native-config";
+// import Constants from "expo-constants";
 
 export default function Index() {
 	const [loading, setLoading] = useState(true);
-	const [isNewUser, setIsNewUser] = useState(true);
+	// const [isNewUser, setIsNewUser] = useState(true);
 	const router = useRouter();
 
 	useEffect(() => {
