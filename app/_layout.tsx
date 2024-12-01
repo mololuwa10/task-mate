@@ -18,6 +18,7 @@
 // import UserTaskProfile from "./UserTaskProfile";
 // import IndividualTaskPage from "./IndividualTaskPage";
 // import Index from ".";
+// import TodaysTask from "./TodaysTask";
 
 // // Example setup
 // // const Stack = createNativeStackNavigator();
@@ -28,90 +29,97 @@
 // 	return (
 // 		<>
 // 			{/* <NavigationContainer> */}
-// 				<Stack
-// 					screenOptions={{
-// 						gestureEnabled: true,
+// 			<Stack.Navigator
+// 				screenOptions={{
+// 					gestureEnabled: true,
+// 					...TransitionPresets.SlideFromRightIOS,
+// 				}}
+// 			>
+// 				<Stack.Screen
+// 					name="Index"
+// 					component={Index}
+// 					options={{ headerShown: false }}
+// 				/>
+// 				<Stack.Screen
+// 					name="LaunchScreen"
+// 					component={LaunchScreen}
+// 					options={{ headerShown: false }}
+// 				/>
+// 				<Stack.Screen
+// 					name="SignInOptions"
+// 					component={SignInOptions}
+// 					options={{ headerShown: false }}
+// 				/>
+// 				<Stack.Screen
+// 					name="Login"
+// 					component={Login}
+// 					options={{ headerShown: false }}
+// 				/>
+// 				<Stack.Screen
+// 					name="Register"
+// 					component={Register}
+// 					options={{ headerShown: false }}
+// 				/>
+// 				<Stack.Screen
+// 					name="Navigation"
+// 					component={Navigation}
+// 					options={{ headerShown: false }}
+// 				/>
+// 				<Stack.Screen
+// 					name="ProfileScreen"
+// 					component={ProfileScreen}
+// 					options={{ headerShown: false }}
+// 				/>
+// 				<Stack.Screen
+// 					name="CreateTask"
+// 					component={CreateTask}
+// 					options={{
+// 						headerShown: false,
 // 						...TransitionPresets.SlideFromRightIOS,
 // 					}}
-// 				>
-// 					<Stack.Screen
-// 						name="Index"
-// 						component={Index}
-// 						options={{ headerShown: false }}
-// 					/>
-// 					<Stack.Screen
-// 						name="LaunchScreen"
-// 						component={LaunchScreen}
-// 						options={{ headerShown: false }}
-// 					/>
-// 					<Stack.Screen
-// 						name="SignInOptions"
-// 						component={SignInOptions}
-// 						options={{ headerShown: false }}
-// 					/>
-// 					<Stack.Screen
-// 						name="Login"
-// 						component={Login}
-// 						options={{ headerShown: false }}
-// 					/>
-// 					<Stack.Screen
-// 						name="Register"
-// 						component={Register}
-// 						options={{ headerShown: false }}
-// 					/>
-// 					<Stack.Screen
-// 						name="Navigation"
-// 						component={Navigation}
-// 						options={{ headerShown: false }}
-// 					/>
-// 					<Stack.Screen
-// 						name="ProfileScreen"
-// 						component={ProfileScreen}
-// 						options={{ headerShown: false }}
-// 					/>
-// 					<Stack.Screen
-// 						name="CreateTask"
-// 						component={CreateTask}
-// 						options={{
-// 							headerShown: false,
-// 							...TransitionPresets.SlideFromRightIOS,
-// 						}}
-// 					/>
-// 					<Stack.Screen
-// 						name="EditTask"
-// 						component={EditTask}
-// 						options={{
-// 							headerShown: false,
-// 							...TransitionPresets.SlideFromRightIOS,
-// 						}}
-// 					/>
-// 					<Stack.Screen
-// 						name="TaskList"
-// 						component={TaskList}
-// 						options={{
-// 							headerShown: false,
-// 							...TransitionPresets.SlideFromRightIOS,
-// 						}}
-// 					/>
-// 					<Stack.Screen
-// 						name="UserTaskProfile"
-// 						component={UserTaskProfile}
-// 						options={{ headerShown: false }}
-// 					/>
-// 					<Stack.Screen
-// 						name="IndividualTaskPage"
-// 						component={IndividualTaskPage}
-// 						options={{ headerShown: false }}
-// 					/>
-// 					<Stack.Screen
-// 						name="EditSubTask"
-// 						component={EditSubTask}
-// 						options={{
-// 							headerShown: false,
-// 						}}
-// 					/>
-// 				</Stack>
-// 			</NavigationContainer>
+// 				/>
+// 				<Stack.Screen
+// 					name="EditTask"
+// 					component={EditTask}
+// 					options={{
+// 						headerShown: false,
+// 						...TransitionPresets.SlideFromRightIOS,
+// 					}}
+// 				/>
+// 				<Stack.Screen
+// 					name="TaskList"
+// 					component={TaskList}
+// 					options={{
+// 						headerShown: false,
+// 						...TransitionPresets.SlideFromRightIOS,
+// 					}}
+// 				/>
+// 				<Stack.Screen
+// 					name="UserTaskProfile"
+// 					component={UserTaskProfile}
+// 					options={{ headerShown: false }}
+// 				/>
+// 				<Stack.Screen
+// 					name="IndividualTaskPage"
+// 					component={IndividualTaskPage}
+// 					options={{ headerShown: false }}
+// 				/>
+// 				<Stack.Screen
+// 					name="EditSubTask"
+// 					component={EditSubTask}
+// 					options={{
+// 						headerShown: false,
+// 					}}
+// 				/>
+// 				<Stack.Screen
+// 					name="TodaysTask"
+// 					component={TodaysTask}
+// 					options={{
+// 						headerShown: false,
+// 					}}
+// 				/>
+// 			</Stack.Navigator>
+// 			{/* </NavigationContainer> */}
 // 			<Toast />
 // 		</>
 // 	);
@@ -138,7 +146,7 @@ export default function RootLayout() {
 				<Stack.Screen name="Register" options={{ headerShown: false }} />
 				<Stack.Screen name="Navigation" options={{ headerShown: false }} />
 				<Stack.Screen name="ProfileScreen" options={{ headerShown: false }} />
-				{/* <Stack.Screen name="CreateTask" options={{ headerShown: false }} /> */}
+				<Stack.Screen name="TodaysTask" options={{ headerShown: false }} />
 				<Stack.Screen
 					name="CreateTask"
 					options={{

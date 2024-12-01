@@ -9,9 +9,12 @@ import CircularProgress from "react-native-circular-progress-indicator";
 import moment from "moment";
 import { getToDoItems } from "@/lib/dbModel";
 import { useCallback, useEffect, useState } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export default function TaskProgressCards() {
+	const navigation = useNavigation<StackNavigationProp<any>>();
+
 	const { width } = Dimensions.get("window");
 
 	const [taskData, setTaskData] = useState({
@@ -98,6 +101,9 @@ export default function TaskProgressCards() {
 							borderRadius: 5,
 							width: 100,
 							padding: 10,
+						}}
+						onPress={() => {
+							navigation.navigate("TodaysTask");
 						}}
 					>
 						<Text
