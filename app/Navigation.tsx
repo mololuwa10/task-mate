@@ -37,10 +37,12 @@ function CustomTabBarButton({
 		>
 			<View
 				style={{
+					paddingVertical: 10,
+					paddingRight: 5,
+					borderRadius: 50,
+					alignItems: "center",
 					width: 60,
 					height: 60,
-					borderRadius: 35,
-					// backgroundColor: "#000000",
 					backgroundColor: "#f2e29b",
 					// backgroundColor: "#FF007F",
 					// backgroundColor: "#FFFF",
@@ -67,7 +69,12 @@ export default function Navigation() {
 						bottom: 0,
 						backgroundColor: "#3b3b3b",
 						height: 75,
+						paddingBottom: 20,
+						paddingTop: 5,
 						...styles.shadow,
+					},
+					tabBarBadgeStyle: {
+						// backgroundColor: "#FF007F",
 					},
 					tabBarLabelStyle: {
 						color: "#fff",
@@ -154,7 +161,7 @@ export default function Navigation() {
 							<Ionicons
 								// name="settings-outline"
 								name="menu-outline"
-								size={40}
+								size={35}
 								color={focused ? "#fff" : "#948a5f"}
 							/>
 						),

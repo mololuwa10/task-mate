@@ -66,8 +66,13 @@ export default function TaskCards({ tasks }: { tasks: any[] }) {
 							>
 								{task.taskName}
 							</Text>
-							<TouchableOpacity>
-								<Icon name="ellipsis-h" size={20} color="#FFFFFF" />
+							<TouchableOpacity
+								onPress={() => {
+									console.log(task.taskId);
+								}}
+							>
+								{/* <Icon name="ellipsis-h" size={20} color="#FFFFFF" /> */}
+								<Icon name="trash" size={20} color="#FFFFFF" />
 							</TouchableOpacity>
 						</View>
 
