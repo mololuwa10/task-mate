@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import getLocalHost from "react-native-localhost";
-import { NetworkInfo } from "react-native-network-info";
+// import getLocalHost from "react-native-localhost";
+// import { NetworkInfo } from "react-native-network-info";
 import Constants from "expo-constants";
 
 export interface SubTask {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -6,10 +6,18 @@ import moment from "moment";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import { deleteToDoItem } from "@/lib/apiDeleteActions";
 
-export default function TaskCards({ tasks }: { tasks: any[] }) {
+export default function TaskCards({
+	tasks,
+	onDeleteTask,
+}: {
+	tasks: any[];
+	onDeleteTask: (taskId: string) => void;
+}) {
 	const navigation = useNavigation<StackNavigationProp<any>>();
 	const router = useRouter();
+	// const [tasks, setTasks] = useState(initialTasks);
 	const getPriorityColor = (priority: string) => {
 		switch (priority) {
 			case "High":
@@ -26,6 +34,33 @@ export default function TaskCards({ tasks }: { tasks: any[] }) {
 	const getIsCompleted = (isCompleted: boolean) => {
 		return isCompleted ? "#4CAF50" : "#F44336";
 	};
+
+	// Function to handle task deletion
+	// const handleDeleteTask = async (taskId: string) => {
+	// 	Alert.alert(
+	// 		"Confirm Delete",
+	// 		"Are you sure you want to delete this task?",
+	// 		[
+	// 			{ text: "Cancel", style: "cancel" },
+	// 			{
+	// 				text: "Delete",
+	// 				style: "destructive",
+	// 				onPress: async () => {
+	// 					try {
+	// 						await deleteToDoItem(taskId);
+	// 						// Remove the deleted task from the state to update the UI
+	// 						setTasks((prevTasks) =>
+	// 							prevTasks.filter((task) => task.taskId !== taskId)
+	// 						);
+	// 						alert("Task deleted successfully.");
+	// 					} catch (error) {
+	// 						alert("Failed to delete task.");
+	// 					}
+	// 				},
+	// 			},
+	// 		]
+	// 	);
+	// };
 
 	// Rendering the task cards
 	return (
@@ -66,11 +101,7 @@ export default function TaskCards({ tasks }: { tasks: any[] }) {
 							>
 								{task.taskName}
 							</Text>
-							<TouchableOpacity
-								onPress={() => {
-									console.log(task.taskId);
-								}}
-							>
+							<TouchableOpacity onPress={() => onDeleteTask(task.taskId)}>
 								{/* <Icon name="ellipsis-h" size={20} color="#FFFFFF" /> */}
 								<Icon name="trash" size={20} color="#FFFFFF" />
 							</TouchableOpacity>

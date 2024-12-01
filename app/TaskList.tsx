@@ -6,6 +6,7 @@ import {
 	TouchableOpacity,
 	ScrollView,
 	Dimensions,
+	Alert,
 } from "react-native";
 import SideSwipe from "react-native-sideswipe";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -14,6 +15,7 @@ import TaskStatusHeader from "@/components/TaskListComponents/TaskStatusHeader";
 import TaskCards from "@/components/TaskListComponents/TaskCards";
 import { getToDoItems } from "@/lib/dbModel";
 import { useFocusEffect } from "@react-navigation/native";
+import { deleteToDoItem } from "@/lib/apiDeleteActions";
 
 export default function TaskList() {
 	const navigation = useNavigation<StackNavigationProp<any>>();
@@ -103,6 +105,37 @@ export default function TaskList() {
 		setFilter(label);
 	};
 
+	const handleDeleteTask = async (taskId: string) => {
+		Alert.alert(
+			"Confirm Delete",
+			"Are you sure you want to delete this task?",
+			[
+				{ text: "Cancel", style: "cancel" },
+				{
+					text: "Delete",
+					style: "destructive",
+					onPress: async () => {
+						try {
+							// Delete from backend
+							await deleteToDoItem(taskId);
+
+							// Remove the task from state
+							setTasks((prevTasks) =>
+								prevTasks.filter((task) => task.taskId !== taskId)
+							);
+							setFilteredTasks((prevTasks) =>
+								prevTasks.filter((task) => task.taskId !== taskId)
+							);
+							alert("Task deleted successfully.");
+						} catch (error) {
+							alert("Failed to delete task.");
+						}
+					},
+				},
+			]
+		);
+	};
+
 	return (
 		<View style={{ flex: 1, backgroundColor: "#1c1c1c" }}>
 			<View style={{ flexDirection: "row", padding: 20 }}>
@@ -145,7 +178,7 @@ export default function TaskList() {
 			{/* Task Cards */}
 			<ScrollView style={{ flex: 1 }}>
 				<View style={{ paddingHorizontal: 20, paddingBottom: 100 }}>
-					<TaskCards tasks={filteredTasks} />
+					<TaskCards tasks={filteredTasks} onDeleteTask={handleDeleteTask} />
 				</View>
 			</ScrollView>
 
