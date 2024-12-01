@@ -53,7 +53,7 @@ function HomeScreen() {
 							alignItems: "center",
 							paddingVertical: 20,
 							paddingHorizontal: 5,
-							paddingTop: Platform.OS === "ios" ? 50 : 60,
+							paddingTop: Platform.OS === "ios" ? 50 : 30,
 						}}
 					>
 						<Icon name="user-circle" size={60} color="#FFFFFF" />
