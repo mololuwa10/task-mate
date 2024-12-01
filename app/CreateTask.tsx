@@ -285,7 +285,7 @@ export default function CreateTask() {
 							alignItems: "center",
 							paddingVertical: 20,
 							paddingHorizontal: 20,
-							paddingTop: Platform.OS === "ios" ? 50 : 45,
+							paddingTop: Platform.OS === "ios" ? 50 : 20,
 							backgroundColor: "#1c1c1c",
 						}}
 					>

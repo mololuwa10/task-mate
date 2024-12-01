@@ -227,7 +227,7 @@ export default function IndividualTaskPage() {
 						paddingVertical: 20,
 						justifyContent: "space-between",
 						paddingHorizontal: 20,
-						paddingTop: Platform.OS === "ios" ? 50 : 45,
+						paddingTop: Platform.OS === "ios" ? 50 : 20,
 						zIndex: 10,
 					}}
 				>
@@ -277,7 +277,7 @@ export default function IndividualTaskPage() {
 							marginBottom: 10,
 						}}
 					>
-						Task Title
+						Task Title:
 					</Text>
 					<Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
 						{task.taskName}
