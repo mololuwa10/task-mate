@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 
 export interface SubTask {
-	subTaskId: string | number;
+	subTaskId?: string | number;
 	subTaskName: string;
 	subtaskDescription: string;
 	subtaskDueDate: string;

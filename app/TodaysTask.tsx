@@ -37,7 +37,13 @@ export default function TodaysTask() {
 				try {
 					const response = await getToDoItems();
 					if (response && response.$values) {
-						const taskData = response.$values;
+						// Get today's date in YYYY-MM-DD format
+						const today = new Date().toISOString().split("T")[0];
+
+						// Filter tasks created today
+						const taskData = response.$values.filter(
+							(task) => task.dateCreated.split("T")[0] === today
+						);
 
 						// Calculate the count for each filter
 						const allCount = taskData.length;
@@ -148,7 +154,7 @@ export default function TodaysTask() {
 						marginTop: 10,
 					}}
 				>
-					Task List
+					Today&apos;s Task
 				</Text>
 			</View>
 

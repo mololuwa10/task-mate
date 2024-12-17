@@ -43,6 +43,7 @@ interface ToDoItem {
 	recurrence?: Recurrence | null;
 	attachments: Attachment[];
 	categoryId: number;
+	categoryName: string;
 	userId: string;
 }
 
@@ -110,7 +111,7 @@ export const getToDoItemById = async (id: number) => {
 		});
 		if (response.ok) {
 			const data: ToDoItem = await response.json();
-			// console.log(data);
+			console.log("Task Item: ", data);
 			return data;
 		} else {
 			Alert.alert("Error", "Failed to fetch tasks");

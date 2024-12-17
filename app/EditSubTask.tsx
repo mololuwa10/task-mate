@@ -49,21 +49,25 @@ export default function EditSubTask() {
 			try {
 				const fetchedTask = await getToDoItemById(taskId);
 				if (fetchedTask) {
-					console.log("Fetched Task:", fetchedTask.subtasks);
+					// console.log("Fetched Task:", fetchedTask.subtasks);
 
-					setTask(fetchedTask);
+					setTask(Array.isArray(fetchedTask) ? fetchedTask[0] : fetchedTask);
 
 					setDueDate(new Date(fetchedTask.dueDate));
 
 					// Set the fetched subtasks to state
-					setSubTasks(fetchedTask.subtasks);
+					setSubTasks(
+						Array.isArray(fetchedTask.subtasks) ? fetchedTask.subtasks : []
+					);
+
+					console.log("Fetched Subtasks:", fetchedTask.subtasks);
 					// Map the dates if available
 					setSubTaskDates(
-						fetchedTask.subtasks.map((subtask: SubTask) =>
-							subtask.subtaskDueDate
-								? new Date(subtask.subtaskDueDate)
-								: new Date()
-						)
+						Array.isArray(fetchedTask.subtasks)
+							? fetchedTask.subtasks.map((sub) =>
+									sub.subtaskDueDate ? new Date(sub.subtaskDueDate) : new Date()
+							  )
+							: []
 					);
 				} else {
 					setError("Failed to load task");
@@ -81,10 +85,9 @@ export default function EditSubTask() {
 	}, [taskId]);
 
 	const addSubTask = () => {
-		setSubTasks([
-			...subTasks,
+		setSubTasks((prevSubTasks) => [
+			...(Array.isArray(prevSubTasks) ? prevSubTasks : []),
 			{
-				subTaskId: "",
 				subTaskName: "",
 				subtaskDescription: "",
 				subtaskDueDate: "",
@@ -206,6 +209,10 @@ export default function EditSubTask() {
 		}
 	};
 
+	// useEffect(() => {
+	// 	console.log("Fetched Subtasks from API:", fetchedTask.subtasks);
+	// }, [task]);
+
 	return (
 		<>
 			<View style={{ flex: 1, backgroundColor: "#1c1c1c" }}>
@@ -217,7 +224,7 @@ export default function EditSubTask() {
 							alignItems: "center",
 							paddingVertical: 20,
 							paddingHorizontal: 20,
-							paddingTop: Platform.OS === "ios" ? 50 : 45,
+							paddingTop: Platform.OS === "ios" ? 50 : 20,
 							backgroundColor: "#1c1c1c",
 						}}
 					>
@@ -281,106 +288,115 @@ export default function EditSubTask() {
 							</Text>
 						</TouchableOpacity>
 
-						{subTasks.map((subtask, index) => (
-							<View
-								key={index}
-								style={{
-									flex: 1,
-									alignItems: "center",
-									marginBottom: 20,
-								}}
-							>
-								<TextInput
+						{Array.isArray(subTasks) && subTasks.length > 0 ? (
+							subTasks.map((subtask, index) => (
+								<View
+									key={index}
 									style={{
-										backgroundColor: "#2c2c2c",
-										color: "white",
-										width: "100%",
-										paddingHorizontal: 15,
-										paddingVertical: 15,
+										flex: 1,
+										flexDirection: "column",
+										backgroundColor: "#1e1e1e",
 										borderRadius: 10,
-										marginBottom: 10,
-									}}
-									placeholder={`Subtask Name ${index + 1}`}
-									placeholderTextColor="#777"
-									value={subtask.subTaskName || ""}
-									onChangeText={(text) =>
-										updateSubTask(index, "subTaskName", text)
-									}
-								/>
-								<TextInput
-									style={{
-										backgroundColor: "#2c2c2c",
-										color: "white",
-										width: "100%",
-										paddingHorizontal: 15,
-										paddingVertical: 15,
-										borderRadius: 10,
-										marginBottom: 10,
-									}}
-									placeholder={`Subtask Description ${index + 1}`}
-									placeholderTextColor="#777"
-									value={subtask.subtaskDescription || ""}
-									onChangeText={(text) =>
-										updateSubTask(index, "subtaskDescription", text)
-									}
-								/>
-								<TouchableOpacity
-									style={{
-										flexDirection: "row",
-										alignItems: "center",
-										backgroundColor: "#2c2c2c",
-										borderRadius: 10,
-										marginBottom: 20,
-										width: "100%",
-										paddingHorizontal: 15,
 										padding: 15,
+										marginBottom: 15,
 									}}
-									onPress={() => toggleSubTaskDatePicker(index)}
 								>
-									<Icon name="calendar" size={20} color="white" />
-									<Text
+									{/* Subtask Name */}
+									<TextInput
 										style={{
 											backgroundColor: "#2c2c2c",
 											color: "white",
 											paddingHorizontal: 15,
 											paddingVertical: 10,
-											borderRadius: 10,
-											flex: 1,
+											borderRadius: 5,
+											marginBottom: 10,
 										}}
-									>
-										{subTaskDates[index]
-											? subTaskDates[index].toDateString()
-											: "Select Due Date"}
-									</Text>
-								</TouchableOpacity>
-
-								{/* Date Picker */}
-								{showSubTaskDatePickers[index] && (
-									<DateTimePicker
-										value={subTaskDates[index] || new Date()}
-										mode="date"
-										display="default"
-										onChange={(event: any, date: Date | undefined) =>
-											onSubTaskDateChange(event, date, index)
+										placeholder={`Subtask Name ${index + 1}`}
+										placeholderTextColor="#777"
+										value={subtask.subTaskName || ""}
+										onChangeText={(text) =>
+											updateSubTask(index, "subTaskName", text)
 										}
 									/>
-								)}
 
-								<TouchableOpacity
-									onPress={() => removeSubtask(index)}
-									style={{
-										backgroundColor: "#ff4d4d",
-										paddingVertical: 10,
-										borderRadius: 10,
-										width: "100%",
-									}}
-								>
-									<Text style={{ color: "white", textAlign: "center" }}>
-										Remove Subtask
-									</Text>
-								</TouchableOpacity>
-							</View>
-						))}
+									{/* Subtask Description */}
+									<TextInput
+										style={{
+											backgroundColor: "#2c2c2c",
+											color: "white",
+											paddingHorizontal: 15,
+											paddingVertical: 10,
+											borderRadius: 5,
+											marginBottom: 10,
+										}}
+										placeholder={`Subtask Description ${index + 1}`}
+										placeholderTextColor="#777"
+										value={subtask.subtaskDescription || ""}
+										onChangeText={(text) =>
+											updateSubTask(index, "subtaskDescription", text)
+										}
+									/>
+
+									{/* Subtask Due Date */}
+									<TouchableOpacity
+										onPress={() => toggleSubTaskDatePicker(index)}
+										style={{
+											flexDirection: "row",
+											alignItems: "center",
+											backgroundColor: "#2c2c2c",
+											padding: 10,
+											borderRadius: 5,
+										}}
+									>
+										<Icon name="calendar" size={20} color="white" />
+										<Text
+											style={{
+												color: "white",
+												marginLeft: 10,
+												flex: 1,
+											}}
+										>
+											{subTaskDates[index]
+												? subTaskDates[index].toDateString()
+												: "Select Due Date"}
+										</Text>
+									</TouchableOpacity>
+
+									{/* Show Date Picker */}
+									{showSubTaskDatePickers[index] && (
+										<DateTimePicker
+											value={subTaskDates[index] || new Date()}
+											mode="date"
+											display="default"
+											onChange={(event, date) =>
+												onSubTaskDateChange(event, date, index)
+											}
+										/>
+									)}
+
+									{/* Remove Subtask Button */}
+									<TouchableOpacity
+										onPress={() => removeSubtask(index)}
+										style={{
+											marginTop: 15,
+											backgroundColor: "#ff4d4d",
+											padding: 10,
+											borderRadius: 5,
+										}}
+									>
+										<Text style={{ color: "white", textAlign: "center" }}>
+											Remove Subtask
+										</Text>
+									</TouchableOpacity>
+								</View>
+							))
+						) : (
+							<Text
+								style={{ color: "white", textAlign: "center", marginTop: 20 }}
+							>
+								No Subtasks Found
+							</Text>
+						)}
 					</View>
 				</ScrollView>
 

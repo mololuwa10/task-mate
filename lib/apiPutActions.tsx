@@ -20,16 +20,16 @@ export interface Recurrence {
 export interface CreateToDoItemsDTO {
 	TaskName: string;
 	TaskDescription: string;
+	DateCreated?: string;
 	DueDate?: string;
 	Priority: string;
 	CategoryId?: number;
 	CategoryName?: string;
-	Subtasks?: SubTask[];
-	Recurrence?: Recurrence;
+	// Subtasks?: SubTask[];
+	// Recurrence?: Recurrence;
 }
 
 const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
-
 // TASKS ==============================================================
 // Edit Task
 export const updateToDoItem = async (
@@ -37,6 +37,108 @@ export const updateToDoItem = async (
 	updatedTask: CreateToDoItemsDTO
 ) => {
 	const token = await AsyncStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("No token found");
+	}
+
+	try {
+		console.log(ip);
+
+		const formData = new FormData();
+		formData.append("ToDoItem", JSON.stringify(updatedTask));
+
+		// http://localhost:5133/api/todoitems/14
+
+		const response = await fetch(`http://${ip}:5133/api/todoitems/${taskId}`, {
+			method: "PUT",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				// "Content-Type": "application/json",
+			},
+			body: formData,
+		});
+
+		if (response.ok) {
+			const data = await response.json();
+			console.log("Task updated successfully: ", data);
+			return data;
+		} else {
+			const errorText = await response.text();
+			console.error("Error updating task: ", errorText);
+			return null;
+		}
+	} catch (error: any) {
+		console.error("Error updating task: ", error.message);
+		return null;
+	}
+};
+
+// Mark task as completed
+export const markTaskAsCompleted = async (taskId: number | string) => {
+	const token = await AsyncStorage.getItem("token");
+	if (!token) {
+		throw new Error("No token found");
+	}
+
+	try {
+		const response = await fetch(
+			`http://${ip}:5133/api/todoitems/complete/${taskId}`,
+			{
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+
+		if (response.ok) {
+			const data = await response.json();
+			console.log("Subtask marked as completed: ", data);
+			return data;
+		} else {
+			const errorText = await response.text();
+			console.error("Error marking subtask as completed: ", errorText);
+			return null;
+		}
+	} catch (error: any) {
+		console.error("Error marking as completed", error.message);
+		return null;
+	}
+};
+
+// Mark task as incomplete
+
+export const markTaskAsInComplete = async (taskId: number | string) => {
+	const token = await AsyncStorage.getItem("token");
+	if (!token) {
+		throw new Error("No token found");
+	}
+
+	try {
+		const response = await fetch(
+			`http://${ip}:5133/api/todoitems/in-complete/${taskId}`,
+			{
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+
+		if (response.ok) {
+			const data = await response.json();
+			console.log("Subtask marked as completed: ", data);
+			return data;
+		} else {
+			const errorText = await response.text();
+			console.error("Error marking subtask as completed: ", errorText);
+			return null;
+		}
+	} catch (error: any) {
+		console.error("Error marking as completed", error.message);
+		return null;
+	}
 };
 
 // SUBTASKS ==============================================================

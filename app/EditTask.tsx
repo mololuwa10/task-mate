@@ -20,6 +20,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
 import { postToDoItem, SubTask } from "@/lib/apiPostActions";
+import { updateToDoItem } from "@/lib/apiPutActions";
 
 type RootStackParamList = {
 	TaskList: undefined;
@@ -168,75 +169,6 @@ export default function EditTask() {
 		}
 	};
 
-	const addSubTask = () => {
-		setSubTasks([
-			...subTasks,
-			{
-				subTaskId: "",
-				subTaskName: "",
-				subtaskDescription: "",
-				subtaskDueDate: "",
-				subtaskIsCompleted: false,
-			},
-		]);
-	};
-
-	// Function to handle subtask due date change
-	const onSubTaskDateChange = (
-		event: any,
-		selectedDate: Date | undefined,
-		index: number
-	) => {
-		const updatedShowPickers = [...showSubTaskDatePickers];
-		updatedShowPickers[index] = Platform.OS === "ios";
-		setShowSubTaskDatePickers(updatedShowPickers);
-
-		if (selectedDate && selectedDate < dueDate) {
-			updateSubTaskDate(index, selectedDate);
-			updateSubTask(index, "subtaskDueDate", selectedDate.toISOString());
-		} else {
-			Toast.show({
-				type: "error",
-				text1: "Invalid Subtask Due Date",
-				text2:
-					"The subtask due date cannot be later than the main task due date.",
-			});
-		}
-	};
-
-	// Function to toggle visibility of the DatePicker for a specific subtask
-	const toggleSubTaskDatePicker = (index: number) => {
-		const updatedShowPickers = [...showSubTaskDatePickers];
-		updatedShowPickers[index] = !updatedShowPickers[index];
-		setShowSubTaskDatePickers(updatedShowPickers);
-	};
-
-	const updateSubTask = (
-		index: number,
-		field: keyof SubTask,
-		value: string
-	) => {
-		const updatedSubTasks = [...subTasks];
-		(updatedSubTasks[index] as any)[field] = value;
-		setSubTasks(updatedSubTasks);
-	};
-
-	const updateSubTaskDate = (index: number, selectedDate: Date) => {
-		const updatedDates = [...subTaskDates];
-		updatedDates[index] = selectedDate || new Date();
-		setSubTaskDates(updatedDates);
-	};
-
-	// Initialize the showDatePickers state when subtasks are added or modified
-	useEffect(() => {
-		setShowSubTaskDatePickers(subTasks.map(() => false));
-	}, [subTasks]);
-
-	// Function to remove a subtask
-	const removeSubtask = (index: number) => {
-		setSubTasks(subTasks.filter((_, i) => i !== index));
-	};
-
 	useEffect(() => {
 		const fetchCategories = async () => {
 			const fetchedCategories = await getCategories();
@@ -261,74 +193,57 @@ export default function EditTask() {
 		{ label: "Low", value: "Low" },
 	];
 
-	const handleCreateTask = async () => {
-		// Create a new Date object with specific time
-		const createdDateWithTime = new Date(dateCreated);
+	const handleEditTask = async () => {
+		const createdDateWithTime = new Date(dateCreated || new Date());
 		createdDateWithTime.setUTCHours(23, 59, 59, 0);
 
-		const dueDateWithTime = new Date(dueDate);
+		const dueDateWithTime = new Date(dueDate || new Date());
 		dueDateWithTime.setUTCHours(23, 59, 59, 0);
 
 		// Format the due date to ISO 8601 string
 		const formattedDueDate = dueDateWithTime.toISOString();
 
-		const formattedDateCreated = dateCreated.toISOString();
-		console.log(formattedDateCreated);
+		const formattedDateCreated = createdDateWithTime.toISOString();
 
-		// Prepare the ToDo item data
-		const toDoItem = {
+		const updateTaskItem = {
 			TaskName: taskName,
 			TaskDescription: taskDescription,
 			DateCreated: formattedDateCreated,
-			DueDate: formattedDueDate, // Correctly formatted due date
+			DueDate: formattedDueDate,
 			Priority: selectedPriority,
 			CategoryId: selectedCategory ? parseInt(selectedCategory) : undefined,
-			Subtasks: subTasks.map((subtask) => ({
-				SubTaskName: subtask.subTaskName,
-				SubtaskDescription: subtask.subtaskDescription,
-				DueDate: subtask.subtaskDueDate,
-			})),
+			CategoryName: selectedCategory || undefined,
+			// Subtasks: subTasks.map((subtask) => ({
+			// 	SubTaskName: subtask.subTaskName,
+			// 	SubtaskDescription: subtask.subtaskDescription,
+			// 	DueDate: subtask.subtaskDueDate,
+			// })),
 		};
 
-		// Convert image uris to file objects
-		const attachments: File[] = images.map((uri) => {
-			const filename = uri.split("/").pop()!;
-			const fileType = filename.split(".").pop()!;
-			return {
-				uri,
-				name: filename,
-				type: `image/${fileType}`,
-			} as any as File;
-		});
+		console.log("Task ID:", taskId);
+		console.log("Update Task Item:", updateTaskItem);
 
 		try {
-			const response = await postToDoItem(toDoItem, attachments);
-
+			const response = await updateToDoItem(taskId, updateTaskItem);
 			if (response) {
-				// Assuming if response is truthy, the task was created successfully
 				Toast.show({
 					type: "success",
-					text1: "Task created",
-					text2: "Your task was created successfully",
+					text1: "Task updated",
+					text2: "Your task was updated successfully",
 				});
-				// Alert.alert("Task Created", "Your task was created successfully");
 				navigation.goBack();
 			} else {
 				Toast.show({
 					type: "error",
-					text1: "Task Creation Failed",
-					text2: "An error occurred while creating the task.",
+					text1: "Task Update Failed",
+					text2: "An error occurred while updating the task.",
 				});
-				Alert.alert(
-					"Task Creation Failed",
-					"An error occurred while creating the task."
-				);
 			}
-		} catch (error: any) {
+		} catch (error) {
 			Toast.show({
 				type: "error",
-				text1: "Task Creation Failed",
-				text2: error.message,
+				text1: "Task Update Failed",
+				text2: "An error occurred while updating the task.",
 			});
 		}
 	};
@@ -439,7 +354,7 @@ export default function EditTask() {
 								// placeholder="August 25, 2023"
 								placeholderTextColor="#777"
 								value={dueDate ? dueDate.toDateString() : "Select Due Date"}
-								editable={false} // Assuming you'll implement a date picker here
+								editable={false}
 							/>
 						</TouchableOpacity>
 
@@ -453,121 +368,6 @@ export default function EditTask() {
 								}
 							/>
 						)}
-
-						{/* <Text style={styles.label}>Sub-task</Text>
-
-						<TouchableOpacity
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								backgroundColor: "#2c2c2c",
-								borderRadius: 10,
-								marginBottom: 20,
-								padding: 10,
-
-								paddingHorizontal: 15,
-							}}
-							onPress={addSubTask}
-						>
-							<Icon name="plus" size={20} color="white" />
-							<Text
-								style={{
-									backgroundColor: "#2c2c2c",
-									color: "white",
-									paddingHorizontal: 15,
-									paddingVertical: 10,
-									borderRadius: 10,
-								}}
-							>
-								Add a Subtask
-							</Text>
-						</TouchableOpacity>
-
-						{subTasks.map((subtask, index) => (
-							<View
-								key={index}
-								style={{
-									flex: 1,
-									alignItems: "center",
-									marginBottom: 20,
-								}}
-							>
-								<TextInput
-									style={{
-										backgroundColor: "#2c2c2c",
-										color: "white",
-										width: "100%",
-										paddingHorizontal: 15,
-										paddingVertical: 15,
-										borderRadius: 10,
-										marginBottom: 10,
-									}}
-									placeholder={`Subtask Name ${index + 1}`}
-									placeholderTextColor="#777"
-									value={subtask.subTaskName}
-									onChangeText={(text) =>
-										updateSubTask(index, "subTaskName", text)
-									}
-								/>
-								<TextInput
-									style={{
-										backgroundColor: "#2c2c2c",
-										color: "white",
-										width: "100%",
-										paddingHorizontal: 15,
-										paddingVertical: 15,
-										borderRadius: 10,
-										marginBottom: 10,
-									}}
-									placeholder={`Subtask Description ${index + 1}`}
-									placeholderTextColor="#777"
-									value={subtask.SubtaskDescription}
-									onChangeText={(text) =>
-										updateSubTask(index, "SubtaskDescription", text)
-									}
-								/>
-								<TouchableOpacity
-									style={{
-										flexDirection: "row",
-										alignItems: "center",
-										backgroundColor: "#2c2c2c",
-										borderRadius: 10,
-										marginBottom: 20,
-										width: "100%",
-										paddingHorizontal: 15,
-									}}
-									onPress={() => toggleSubTaskDatePicker(index)}
-								>
-									<Icon name="calendar" size={20} color="white" />
-									<TextInput
-										style={styles.input}
-										placeholder={`Due Date ${index + 1}`}
-										placeholderTextColor="#777"
-										value={
-											subTaskDates[index]
-												? subTaskDates[index].toDateString()
-												: "Select Date"
-										}
-										editable={false}
-									/>
-								</TouchableOpacity>
-
-								{showSubTaskDatePickers[index] && (
-									<DateTimePicker
-										value={subTaskDates[index] || new Date()}
-										mode="date"
-										display="default"
-										onChange={(event, selectedDate) =>
-											onSubTaskDateChange(event, selectedDate, index)
-										}
-									/>
-								)}
-
-								<TouchableOpacity onPress={() => removeSubtask(index)}>
-									<Icon name="trash" size={20} color="red" />
-								</TouchableOpacity>
-							</View>
-						))} */}
 
 						<Text style={styles.label}>Select Category</Text>
 						<RNPickerSelect
@@ -634,7 +434,7 @@ export default function EditTask() {
 						borderRadius: 10,
 						alignItems: "center",
 					}}
-					onPress={handleCreateTask}
+					onPress={handleEditTask}
 				>
 					<Text style={{ color: "#1c1c1c", fontSize: 16, fontWeight: "bold" }}>
 						Save Changes

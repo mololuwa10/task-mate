@@ -228,7 +228,7 @@ export default function CreateTask() {
 			DueDate: formattedDueDate, // Correctly formatted due date
 			Priority: selectedPriority,
 			CategoryId: selectedCategory ? parseInt(selectedCategory) : undefined,
-			Subtasks: subTasks,
+			SubTasks: subTasks,
 		};
 
 		// Convert image uris to file objects
@@ -577,7 +577,7 @@ export default function CreateTask() {
 					onPress={handleCreateTask}
 				>
 					<Text style={{ color: "#1c1c1c", fontSize: 16, fontWeight: "bold" }}>
-						Save Changes
+						Create Task{" "}
 					</Text>
 				</TouchableOpacity>
 			</View>

@@ -29,6 +29,8 @@ import {
 	markSubTaskAsCompleted,
 	markSubTaskAsInCompleted,
 	updateSubTasks,
+	markTaskAsCompleted,
+	markTaskAsInComplete,
 } from "@/lib/apiPutActions";
 
 type RootStackParamList = {
@@ -121,7 +123,7 @@ export default function IndividualTaskPage() {
 				try {
 					const fetchedTask = await getToDoItemById(taskId);
 					if (fetchedTask) {
-						console.log("Fetched Task:", fetchedTask.subtasks);
+						// console.log("Fetched Task:", fetchedTask);
 						setTask(fetchedTask);
 					} else {
 						setError("Failed to load task");
@@ -176,6 +178,26 @@ export default function IndividualTaskPage() {
 			});
 		} catch (error) {
 			console.error("Error updating subtask:", error);
+		}
+	};
+
+	const handleTaskCompleted = async (newState: boolean) => {
+		try {
+			// Update the task's completion status on the server
+			if (newState) {
+				await markTaskAsCompleted(taskId);
+				console.log("Task marked as completed");
+			} else {
+				await markTaskAsInComplete(taskId);
+				console.log("Task marked as incomplete");
+			}
+			// Update the local state after successful call
+			setTask((prevTask: any) => ({
+				...prevTask,
+				taskIsCompleted: newState,
+			}));
+		} catch (error) {
+			console.error("Error updating task:", error);
 		}
 	};
 
@@ -332,7 +354,22 @@ export default function IndividualTaskPage() {
 						style={{
 							flexDirection: "row",
 							marginTop: 20,
-							gap: 77,
+							gap: 105,
+						}}
+					>
+						<Text style={{ color: "white", fontSize: 14, fontWeight: "300" }}>
+							Category:
+						</Text>
+						<Text style={{ color: "white", fontSize: 14, fontWeight: "600" }}>
+							{task.categoryName}
+						</Text>
+					</View>
+
+					<View
+						style={{
+							flexDirection: "row",
+							marginTop: 20,
+							gap: 73,
 						}}
 					>
 						<Text style={{ color: "white", fontSize: 14, fontWeight: "300" }}>
@@ -485,6 +522,22 @@ export default function IndividualTaskPage() {
 						/>
 					))}
 				</ScrollView>
+
+				<TouchableOpacity
+					style={{
+						backgroundColor: "#f2e29b",
+						paddingVertical: 15,
+						borderRadius: 10,
+						alignItems: "center",
+						marginHorizontal: 20,
+						marginBottom: 20,
+					}}
+					onPressIn={() => handleTaskCompleted(true)}
+				>
+					<Text style={{ color: "#1c1c1c", fontSize: 16, fontWeight: "bold" }}>
+						{task.isCompleted ? "Task Completed" : "Mark Task as Completed"}
+					</Text>
+				</TouchableOpacity>
 			</View>
 		</>
 	);
