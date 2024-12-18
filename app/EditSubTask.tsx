@@ -17,6 +17,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { getToDoItemById } from "@/lib/dbModel";
 import { updateSubTasks } from "@/lib/apiPutActions";
 import { postSubTask } from "@/lib/apiPostActions";
+import { deleteSubTask } from "@/lib/apiDeleteActions";
 
 type RootStackParamList = {
 	TaskList: undefined;
@@ -42,6 +43,7 @@ export default function EditSubTask() {
 	>([]);
 	const [dueDate, setDueDate] = useState(new Date());
 	const [error, setError] = useState<string | null>(null);
+	const [removedSubTasks, setRemovedSubTasks] = useState<SubTask[]>([]);
 
 	useEffect(() => {
 		const fetchTask = async () => {
@@ -57,14 +59,15 @@ export default function EditSubTask() {
 
 					// Set the fetched subtasks to state
 					setSubTasks(
-						Array.isArray(fetchedTask.subtasks) ? fetchedTask.subtasks : []
+						Array.isArray(fetchedTask.subtasks?.$values)
+							? fetchedTask.subtasks.$values
+							: []
 					);
 
-					console.log("Fetched Subtasks:", fetchedTask.subtasks);
 					// Map the dates if available
 					setSubTaskDates(
-						Array.isArray(fetchedTask.subtasks)
-							? fetchedTask.subtasks.map((sub) =>
+						Array.isArray(fetchedTask.subtasks?.$values)
+							? fetchedTask.subtasks?.$values.map((sub: any) =>
 									sub.subtaskDueDate ? new Date(sub.subtaskDueDate) : new Date()
 							  )
 							: []
@@ -142,76 +145,86 @@ export default function EditSubTask() {
 	};
 
 	// Function to remove a subtask
+	// const removeSubtask = (index: number) => {
+	// 	setSubTasks(subTasks.filter((_, i) => i !== index));
+	// };
 	const removeSubtask = (index: number) => {
+		const subtaskToRemove = subTasks[index];
+		if (subtaskToRemove?.subTaskId) {
+			// Add the subtask to the removed list if it exists in the database
+			setRemovedSubTasks((prev) => [...prev, subtaskToRemove]);
+		}
+		// Remove the subtask from the current state
 		setSubTasks(subTasks.filter((_, i) => i !== index));
 	};
 
 	const handleSaveChanges = async () => {
 		setLoading(true);
 		try {
-			for (let i = 0; i < subTasks.length; i++) {
-				const subtask = subTasks[i];
-				const { subTaskId } = subTasks[i];
-
+			// Create an array of promises for updating or creating subtasks
+			const subTaskPromises = subTasks.map(async (subtask, i) => {
+				const { subTaskId } = subtask;
 				const updatedSubtask = {
 					...subtask,
-					subtaskDueDate: subTaskDates[i].toISOString(),
+					subtaskDueDate:
+						subTaskDates[i]?.toISOString() || new Date().toISOString(),
 				};
 
 				if (subTaskId) {
-					const response = await updateSubTasks(updatedSubtask, subTaskId);
-					if (response) {
-						Toast.show({
-							type: "success",
-							text1: "Subtasks Updated",
-							text2: "All subtasks have been updated successfully",
-						});
-
-						navigation.navigate("IndividualTaskPage");
-
-						console.log("Subtask updated successfully:", response);
-					} else {
-						console.error("Failed to update subtask");
-					}
+					// Update existing subtask
+					return updateSubTasks(updatedSubtask, subTaskId);
 				} else {
-					const response = await postSubTask(
+					// Create new subtask
+					return postSubTask(
 						{
-							SubTaskName: subtask.subTaskName,
-							SubtaskDescription: subtask.subtaskDescription,
-							SubtaskDueDate: subtask.subtaskDueDate,
+							SubTaskName: updatedSubtask.subTaskName,
+							SubtaskDescription: updatedSubtask.subtaskDescription,
+							SubtaskDueDate: updatedSubtask.subtaskDueDate,
 						},
 						task.taskId
 					);
-					if (response) {
-						Toast.show({
-							type: "success",
-							text1: "Subtasks Created",
-							text2: "New subtasks have been added successfully",
-						});
-
-						navigation.navigate("IndividualTaskPage");
-
-						console.log("Subtask created successfully:", response);
-					} else {
-						console.error("Failed to create subtask");
-					}
 				}
-			}
+			});
+
+			const deletePromises = removedSubTasks.map(async (removedSubtask) => {
+				if (removedSubtask?.subTaskId) {
+					return deleteSubTask(removedSubtask.subTaskId);
+				}
+			});
+
+			// Wait for all API calls to complete
+			await Promise.all([...subTaskPromises, ...deletePromises]);
+
+			// Clean up states
+			setTask(null);
+			setSubTasks([]);
+			setSubTaskDates([]);
+			setRemovedSubTasks([]);
+
+			// Show success toast
+			Toast.show({
+				type: "success",
+				text1: "Changes Saved",
+				text2: "All subtasks have been updated successfully.",
+			});
+
+			// Navigate back after successful updates
+			// Navigate with a delay
+			setTimeout(() => {
+				navigation.navigate("IndividualTaskPage");
+			}, 300);
+			// navigation.navigate("IndividualTaskPage");
 		} catch (error) {
-			console.error(error);
+			console.error("Error saving changes:", error);
 			Toast.show({
 				type: "error",
 				text1: "Error",
-				text2: "Failed to save changes",
+				text2: "Failed to save changes. Please try again.",
 			});
 		} finally {
 			setLoading(false);
 		}
 	};
-
-	// useEffect(() => {
-	// 	console.log("Fetched Subtasks from API:", fetchedTask.subtasks);
-	// }, [task]);
 
 	return (
 		<>
@@ -297,7 +310,7 @@ export default function EditSubTask() {
 										flexDirection: "column",
 										backgroundColor: "#1e1e1e",
 										borderRadius: 10,
-										padding: 15,
+										paddingHorizontal: 5,
 										marginBottom: 15,
 									}}
 								>
@@ -307,7 +320,7 @@ export default function EditSubTask() {
 											backgroundColor: "#2c2c2c",
 											color: "white",
 											paddingHorizontal: 15,
-											paddingVertical: 10,
+											paddingVertical: 15,
 											borderRadius: 5,
 											marginBottom: 10,
 										}}
@@ -325,7 +338,7 @@ export default function EditSubTask() {
 											backgroundColor: "#2c2c2c",
 											color: "white",
 											paddingHorizontal: 15,
-											paddingVertical: 10,
+											paddingVertical: 15,
 											borderRadius: 5,
 											marginBottom: 10,
 										}}
@@ -346,6 +359,10 @@ export default function EditSubTask() {
 											backgroundColor: "#2c2c2c",
 											padding: 10,
 											borderRadius: 5,
+											paddingHorizontal: 15,
+											paddingVertical: 15,
+
+											marginBottom: 10,
 										}}
 									>
 										<Icon name="calendar" size={20} color="white" />

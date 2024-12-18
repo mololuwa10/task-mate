@@ -29,3 +29,34 @@ export const deleteToDoItem = async (taskId: string) => {
 		}
 	} catch (error: any) {}
 };
+
+export const deleteSubTask = async (subtaskId: number | string) => {
+	const token = await AsyncStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("No token found");
+	}
+
+	try {
+		const response = await fetch(
+			`http://${ip}:5133/api/subtasks/${subtaskId}`,
+			{
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			}
+		);
+
+		if (response.status === 204) {
+			console.log("Subtask deleted successfully.");
+		} else if (response.status === 404) {
+			console.log("Subtask not found.");
+		} else {
+			console.error("Failed to delete subtask.");
+		}
+	} catch (error: any) {
+		console.error("Error deleting subtask:", error);
+	}
+};
