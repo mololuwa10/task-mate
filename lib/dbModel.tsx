@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
-import getLocalHost from "react-native-localhost";
-import { NetworkInfo } from "react-native-network-info";
 import Constants from "expo-constants";
 
 interface SubTask {
@@ -196,7 +194,6 @@ export const getCompletedTasks = async () => {
 // GET ALL CATEGORIES
 export const getCategories = async () => {
 	try {
-		// const ip = getLocalHost;
 		const response = await fetch(`http://${ip}:5133/api/categories`, {
 			method: "GET",
 			headers: {
@@ -205,7 +202,6 @@ export const getCategories = async () => {
 		});
 
 		if (response.ok) {
-			// sourcery skip: inline-immediately-returned-variable
 			const data = await response.json();
 			console.log(data);
 			return data;
