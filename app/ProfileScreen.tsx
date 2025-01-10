@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
 	View,
 	Text,
@@ -8,7 +8,11 @@ import {
 	Alert,
 	Switch,
 } from "react-native";
-import { CommonActions, useNavigation } from "@react-navigation/native";
+import {
+	CommonActions,
+	useFocusEffect,
+	useNavigation,
+} from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { fetchUserDetails, UserDetails, useLogout } from "@/lib/auth";
@@ -19,16 +23,23 @@ function ProfileScreen() {
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
 	const { logout } = useLogout();
 
-	useEffect(() => {
-		const getUserDetails = async () => {
-			const details = await fetchUserDetails();
-			if (details) {
-				setUserDetails(details);
-			}
-		};
+	useFocusEffect(
+		useCallback(() => {
+			let isMounted = true;
+			const getUserDetails = async () => {
+				const details = await fetchUserDetails();
+				if (details) {
+					setUserDetails(details);
+				}
+			};
 
-		getUserDetails();
-	}, []);
+			getUserDetails();
+
+			return () => {
+				isMounted = false;
+			};
+		}, [])
+	);
 
 	const handleLogout = () => {
 		Alert.alert("Logout", "Are you sure you want to logout?", [
@@ -151,6 +162,7 @@ function ProfileScreen() {
 									paddingBottom: 10,
 									borderBottomWidth: 0.5,
 								}}
+								onPress={() => navigation.navigate("PersonalInfo")}
 							>
 								<Text style={{ color: "#fff" }}>Personal Info</Text>
 								<Icon color={"#fff"} name="arrow-right" />
@@ -180,6 +192,7 @@ function ProfileScreen() {
 									paddingBottom: 10,
 									borderBottomWidth: 0.5,
 								}}
+								onPress={() => navigation.navigate("TaskList")}
 							>
 								<Text style={{ color: "#fff" }}>All Tasks</Text>
 								<Icon color={"#fff"} name="arrow-right" />

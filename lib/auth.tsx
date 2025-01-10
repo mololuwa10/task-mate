@@ -6,10 +6,10 @@ import React, { useState, useEffect, useCallback } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { NetworkInfo } from "react-native-network-info";
+// import { NetworkInfo } from "react-native-network-info";
 import { Alert } from "react-native";
-import getLocalHost from "react-native-localhost";
-import * as Network from "expo-network";
+// import getLocalHost from "react-native-localhost";
+// import * as Network from "expo-network";
 import Constants from "expo-constants";
 
 type RootStackParamList = {
@@ -26,7 +26,7 @@ export interface UserDetails {
 	email: string;
 	dateCreated: string;
 	toDoItems: any[] | null;
-	phoneNumber: string | null;
+	phoneNumber: string;
 	phoneNumberConfirmed: boolean;
 	twoFactorEnabled: boolean;
 	lockoutEnabled: boolean;

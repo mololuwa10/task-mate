@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 // import React, { useState, useEffect } from "react";
 
+// sourcery skip: remove-redundant-boolean
 const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
 
 export const deleteToDoItem = async (taskId: string) => {

@@ -22,16 +22,23 @@ function HomeScreen() {
 	const navigation = useNavigation<StackNavigationProp<any>>();
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
 
-	useEffect(() => {
-		const getUserDetails = async () => {
-			const details = await fetchUserDetails();
-			if (details) {
-				setUserDetails(details);
-			}
-		};
+	useFocusEffect(
+		useCallback(() => {
+			let isMounted = true;
+			const getUserDetails = async () => {
+				const details = await fetchUserDetails();
+				if (details) {
+					setUserDetails(details);
+				}
+			};
 
-		getUserDetails();
-	}, []);
+			getUserDetails();
+
+			return () => {
+				isMounted = false;
+			};
+		}, [])
+	);
 
 	return (
 		<>

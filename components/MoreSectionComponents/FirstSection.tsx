@@ -1,9 +1,10 @@
 import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { fetchUserDetails, UserDetails } from "@/lib/auth";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router";
 
 type RootStackParamList = {
 	Navigation: undefined;
@@ -21,16 +22,23 @@ export default function FirstSection() {
 	const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
 	const navigation = useNavigation<StackNavigationProp<any>>();
 
-	useEffect(() => {
-		const getUserDetails = async () => {
-			const details = await fetchUserDetails();
-			if (details) {
-				setUserDetails(details);
-			}
-		};
+	useFocusEffect(
+		useCallback(() => {
+			let isMounted = true;
+			const getUserDetails = async () => {
+				const details = await fetchUserDetails();
+				if (details) {
+					setUserDetails(details);
+				}
+			};
 
-		getUserDetails();
-	}, []);
+			getUserDetails();
+
+			return () => {
+				isMounted = false;
+			};
+		}, [])
+	);
 
 	return (
 		<>

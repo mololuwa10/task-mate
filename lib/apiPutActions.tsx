@@ -29,6 +29,20 @@ export interface CreateToDoItemsDTO {
 	// Recurrence?: Recurrence;
 }
 
+export interface EditUserModel {
+	FirstName: string;
+	LastName: string;
+	Email: string;
+	Username: string;
+	PhoneNumber: string;
+}
+
+export interface ChangePasswordModel {
+	OldPassword: string;
+	NewPassword: string;
+	ConfirmPassword: string;
+}
+
 const ip = Constants.expoConfig?.extra?.apiHost || "http://localhost:5133";
 // TASKS ==============================================================
 // Edit Task
@@ -245,6 +259,44 @@ export const markSubTaskAsInCompleted = async (subTaskId: number | string) => {
 		}
 	} catch (error: any) {
 		console.error("Error marking as in-completed", error.message);
+		return null;
+	}
+};
+
+//==================================================================================
+
+// Users Profile
+export const updateUserProfile = async (editUserModel: EditUserModel) => {
+	const token = await AsyncStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("No token found");
+	}
+
+	try {
+		const response = await fetch(
+			`http://${ip}:5133/api/UserAccount/edit-user`,
+			{
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(editUserModel),
+			}
+		);
+
+		if (response.ok) {
+			const data = await response.json();
+			console.log("User profile updated successfully: ", data);
+			return data;
+		} else {
+			const errorText = await response.text();
+			console.error("Error updating user profile: ", errorText);
+			return null;
+		}
+	} catch (error: any) {
+		console.error("Error updating user profile: ", error.message);
 		return null;
 	}
 };

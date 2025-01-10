@@ -147,6 +147,7 @@ export default function RootLayout() {
 				<Stack.Screen name="Navigation" options={{ headerShown: false }} />
 				<Stack.Screen name="ProfileScreen" options={{ headerShown: false }} />
 				<Stack.Screen name="TodaysTask" options={{ headerShown: false }} />
+				<Stack.Screen name="PersonalInfo" options={{ headerShown: false }} />
 				<Stack.Screen
 					name="CreateTask"
 					options={{
