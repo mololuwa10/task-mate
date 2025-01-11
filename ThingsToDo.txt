@@ -8,15 +8,14 @@ Mark as Complete: Implement functionality to mark tasks as completed. (DONE)
 Task Details: Provide a view for detailed task information. (DONE ON THE BACKEND AND FRONTEND)
 
 2. Task Organization (Week 3)
-
-Categorization: Develop functionality to organize tasks into categories or projects.
+Categorization: Develop functionality to organize tasks into categories or projects. (DONE)
 Due Dates: Implement due dates for tasks. (DONE)
 Priority Levels: Set up priority levels for tasks. (DONE)
 
 3. User Authentication (Week 4)
 
 Sign Up/Login: Create the ability for users to sign up and log in. (DONE)
-User Profiles: Develop basic user profiles and preferences.
+User Profiles: Develop basic user profiles and preferences. (DONE)
 
 Phase 2: Enhanced Functionality and User Experience
 4. Advanced Task Management (Week 5-6)

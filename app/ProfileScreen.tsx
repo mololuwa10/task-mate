@@ -16,6 +16,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { fetchUserDetails, UserDetails, useLogout } from "@/lib/auth";
+import { deleteUser } from "@/lib/apiDeleteActions";
 
 function ProfileScreen() {
 	const navigation = useNavigation<StackNavigationProp<any>>();
@@ -68,7 +69,26 @@ function ProfileScreen() {
 					text: "Cancel",
 					style: "cancel",
 				},
-				{ text: "Delete", onPress: () => console.log("Account Deleted") },
+				{
+					text: "Delete",
+					style: "destructive",
+					onPress: async () => {
+						try {
+							await deleteUser();
+							navigation.dispatch(
+								CommonActions.reset({
+									index: 0,
+									routes: [{ name: "LaunchScreen" }],
+								})
+							);
+						} catch (error: any) {
+							Alert.alert(
+								"Delete Failed",
+								"An error occurred while deleting your account. Please try again."
+							);
+						}
+					},
+				},
 			]
 		);
 	};
